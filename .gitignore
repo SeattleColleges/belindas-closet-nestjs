@@ -1,5 +1,6 @@
 # config file
-*.env
+.env*
+!.env.sample
 
 # compiled output
 /dist
