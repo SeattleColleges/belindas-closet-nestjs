@@ -70,7 +70,7 @@ import {
       }
     }
   
-    @Get('/:id')
+    @Get(':id')
     async findByID( 
     @Res() response, 
     @Param('id') id: string) {
