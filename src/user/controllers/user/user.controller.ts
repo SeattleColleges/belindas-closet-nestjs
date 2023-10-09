@@ -6,6 +6,7 @@ import { Role } from 'src/user/types/user.model';
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+
     /* `addUser` method is a route handler for the POST request to the '/user/add' endpoint. 
     It takes in the user's name, email, and role from the request body. */
     @Post('add')
@@ -25,6 +26,28 @@ export class UserController {
     async getAllUsers() {
       return await this.userService.getAllUsers();
     }
+
+
+    /* Reordering the route handlers so that specific routes come before dynamic routes: 
+    @Get('password-reset-email-sent') and @Get('registration-successful') route handlers above the @Get(':id') route handler*/
+    
+    /* This method is a route handler for the GET request to the '/user/password-reset-email-sent' endpoint. 
+    Currently returns a JSON object
+    with a message indicating that the password-reset-email-sent route has not been implemented yet. */
+    @Get('password-reset-email-sent')
+    passwordResetEmailSent() {
+      return { message: 'Password reset email sent route not implemented yet' };
+    }
+
+    /* This method is a route handler for the GET request to the '/user/registration-successful' endpoint.
+    The method is currently returning a JSON object 
+    with a message indicating that the registration-successful route has not been implemented yet. */
+    @Get('registration-successful')
+    registrationSuccessful() {
+      return { message: 'Registation successful route not implemented yet' };
+    }
+
+
   
     /* `getUserById` method is a route handler for the GET request to the '/user/:id' endpoint. 
     It takes in the user's ID as a parameter from the URL path (`@Param('id') id: string`). */
@@ -94,28 +117,12 @@ export class UserController {
       return { message: 'Re-enter email address route not implemented yet' };
     }
 
-    /* This method is a route handler for the GET request to the '/user/password-reset-email-sent' endpoint. 
-    Currently returns a JSON object
-    with a message indicating that the password-reset-email-sent route has not been implemented yet. */
-    @Get('password-reset-email-sent')
-    passwordResetEmailSent() {
-      return { message: 'Password reset email sent route not implemented yet' };
-    }
-
     /* This method is a route handler for the POST request to the '/user/register' endpoint.
     Currently, returns a JSON object 
     with a message indicating that the register route has not been implemented yet. */
     @Post('register')
     register() {
       return { message: 'Registration route not implemented yet' };
-    }
-
-    /* This method is a route handler for the GET request to the '/user/registration-successful' endpoint.
-    The method is currently returning a JSON object 
-    with a message indicating that the registration-successful route has not been implemented yet. */
-    @Get('registration-successful')
-    registrationSuccessful() {
-      return { message: 'Registation successful route not implemented yet' };
     }
 
 }

@@ -14,6 +14,38 @@ import {
   @Controller('products')
   export class ProductsController {
     constructor(private readonly productService: ProductsService) {}
+
+
+    /* Below methods are stubbed which will be implemented later to handle the logic for the product functionality */
+    
+    /* This method is a route handler for the GET request to the '/products/product-creation-view' endpoint.
+    Currently, returns a JSON object 
+    with a message indicating that the create-view route has not been implemented yet. */
+    @Get('product-creation-view')
+    productCreationView() {
+      return { message: 'Product creation view route not implemented yet' }
+    }
+
+    /* This method is a route handler for the GET request to the '/products/product-view' endpoint.
+    Currently, returns a JSON object 
+    with a message indicating that the product-view route has not been implemented yet. */
+    @Get('product-view')
+    productsView() {
+      return { message: 'Products view route not implemented yet' }
+    }
+
+    
+    /* This method is a route handler for the GET request to the '/products/product-detail/:id' endpoint.
+    This endpoint is used to retrieve the details of a specific product based on its ID. 
+    Currently, returns a JSON object 
+    with a message indicating that the product-view route has not been implemented yet. */
+    @Get('product-detail/:id')
+    productsDetail() {
+      return { message: 'Product detail route not implemented yet' }
+    }
+
+
+
   
     @Post('add')
     async createProduct(
@@ -147,39 +179,5 @@ import {
   //     }
   //   }
   // }
-
-
-  
-  /* Below methods are stubbed which will be implemented later to handle the logic for the product functionality */
-
-  
-  /* This method is a route handler for the GET request to the '/products/product-creation-view' endpoint.
-  Currently, returns a JSON object 
-  with a message indicating that the create-view route has not been implemented yet. */
-  @Get('product-creation-view')
-  productCreationView() {
-    return { message: 'Product creation view route not implemented yet' }
-  }
-
-  /* This method is a route handler for the GET request to the '/products/product-view' endpoint.
-  Currently, returns a JSON object 
-  with a message indicating that the product-view route has not been implemented yet. */
-  @Get('product-view')
-  productsView() {
-    return { message: 'Products view route not implemented yet' }
-  }
-
-  
-  /* This method is a route handler for the GET request to the '/products/product-detail/:id' endpoint.
-  This endpoint is used to retrieve the details of a specific product based on its ID. 
-  Currently, returns a JSON object 
-  with a message indicating that the product-view route has not been implemented yet. */
-  @Get('product-detail/:id')
-  productsDetail() {
-    return { message: 'Product detail route not implemented yet' }
-  }
-
-
-
 
 }
