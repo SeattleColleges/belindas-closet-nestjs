@@ -5,52 +5,29 @@ import {
     HttpStatus,
     Param,
     Post,
-    Patch,
     Res,
+    Put,
   } from '@nestjs/common';
-  import { ProductsService } from 'src/products/services/products/products.service';
-
-  
+import { ProductsService } from 'src/products/services/products/products.service';
+import { CreateProductDto } from 'src/products/dto/create-product.dto';
+import { UpdateProductDto } from 'src/products/dto/update-product.dto';
   @Controller('products')
   export class ProductsController {
     constructor(private readonly productService: ProductsService) {}
   
-    @Post('add')
-    async createProduct(
-      @Res() response, 
-      @Body('productId') productId: string,
-      @Body('productType') productType: [],
-      @Body('gender') gender: [],
-      @Body('productShoeSize') productShoeSize: [],
-      @Body('productSize') productSize: [],
-      @Body('productSizePantsWaist') productSizePantsWaist: [],
-      @Body('productSizePantsInseam') productSizePantsInseam: [],
-      @Body('productDescriptionOptional') productDescriptionOptional: string,
-      @Body('productImage') productImage: string,
-
-      ) {
+    @Post('new')
+    async createProduct(@Body() productDto: CreateProductDto, @Res() response) {
       try {
-        const newProduct = await this.productService.create(
-          productId,
-          productType,
-          gender,
-          productShoeSize,
-          productSize,
-          productSizePantsWaist,
-          productSizePantsInseam,
-          productDescriptionOptional,
-          productImage,
-
-          );
+        const newProduct = await this.productService.createProduct(productDto);
         return response.status(HttpStatus.CREATED).json({
           message: 'Product successfully created',
-          id: newProduct
+          product: newProduct,
         });
       } catch (error) {
-        return response.status(HttpStatus.BAD_REQUEST).json({
-          message: 'Failed to create product, please try again',
+        return {
+          message: "Failed to create product, please try again",
           error: error.message,
-        });
+        };
       }
     }
   
@@ -70,7 +47,7 @@ import {
       }
     }
   
-    @Get(':id')
+    @Get('find/:id')
     async findByID( 
     @Res() response, 
     @Param('id') id: string) {
@@ -89,37 +66,18 @@ import {
       }
     }
   
-    @Patch('update/:id')
-    async updateProduct(
+    @Put('update/:id')
+    async updateProductById(
       @Res() response,
       @Param('id') id: string,
-      @Body('productId') productId: string,
-      @Body('productType') productType: [],
-      @Body('gender') gender: [],
-      @Body('productShoeSize') productShoeSize: [],
-      @Body('productSize') productSize: [],
-      @Body('productSizePantsWaist') productSizePantsWaist: [],
-      @Body('productSizePantsInseam') productSizePantsInseam: [],
-      @Body('productDescriptionOptional') productDescriptionOptional: string,
-      @Body('productImage') productImage: string,
+      @Body() productDto: UpdateProductDto,
     ) {
       try {
-        const updatedProduct = await this.productService.updateProduct(
-          id, 
-          productId,
-          productType,
-          gender,
-          productShoeSize,
-          productSize,
-          productSizePantsWaist,
-          productSizePantsInseam,
-          productDescriptionOptional,
-          productImage,
-          );
-      return response.status(HttpStatus.OK).json({
-        message: 'Product successfully updated',
-        product: updatedProduct,
-      });
+        const updatedProduct = await this.productService.updateProduct(id, productDto);
+        return response.status(HttpStatus.OK).json({
+          message: 'Product successfully updated',
+          product: updatedProduct,
+        });
       } catch (error) {
         return response.status(HttpStatus.NOT_FOUND).json({
           message: "Failed to update product, please try again",
@@ -131,7 +89,7 @@ import {
   
   // we will more than likely change this delete function to an update sort of like a soft-delete. ex. isDeleted = true
 
-  //   @Delete('/:id')
+  //   @Delete('remove/:id')
   //   async deleteProduct(@Res() response, @Param('id') id: string) {
   //     try {
   //       const deletedProduct = await this.productService.delete(id);
