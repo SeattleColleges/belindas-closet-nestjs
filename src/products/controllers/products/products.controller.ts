@@ -15,14 +15,14 @@ import { UpdateProductDto } from 'src/products/dto/update-product.dto';
   export class ProductsController {
     constructor(private readonly productService: ProductsService) {}
   
-    @Post('add')
-    async createProduct(@Body() productDto: CreateProductDto) {
+    @Post('new')
+    async createProduct(@Body() productDto: CreateProductDto, @Res() response) {
       try {
-        const product = await this.productService.createProduct(productDto);
-        return {
+        const newProduct = await this.productService.createProduct(productDto);
+        return response.status(HttpStatus.CREATED).json({
           message: 'Product successfully created',
-          product: product,
-        };
+          product: newProduct,
+        });
       } catch (error) {
         return {
           message: "Failed to create product, please try again",
@@ -47,7 +47,7 @@ import { UpdateProductDto } from 'src/products/dto/update-product.dto';
       }
     }
   
-    @Get(':id')
+    @Get('find/:id')
     async findByID( 
     @Res() response, 
     @Param('id') id: string) {
@@ -89,7 +89,7 @@ import { UpdateProductDto } from 'src/products/dto/update-product.dto';
   
   // we will more than likely change this delete function to an update sort of like a soft-delete. ex. isDeleted = true
 
-  //   @Delete('/:id')
+  //   @Delete('remove/:id')
   //   async deleteProduct(@Res() response, @Param('id') id: string) {
   //     try {
   //       const deletedProduct = await this.productService.delete(id);
