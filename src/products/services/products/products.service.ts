@@ -1,41 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ProductDocument } from 'src/products/types/products.model'
-
-@Injectable()
+import { Product } from 'src/products/schemas/product.schema';
 export class ProductsService {
   constructor(
-    @InjectModel('Product') private productModel: Model<ProductDocument>,
+    @InjectModel('Product') private productModel: Model<Product>,
   ) {}
 
-  async create(
-    productId: string,
-    productType: [],
-    gender: [],
-    productShoeSize: [],
-    productSize: [],
-    productSizePantsWaist: [],
-    productSizePantsInseam: [],
-    productDescriptionOptional: string,
-    productImage: string,
-    ): Promise<any> {
-    const newProduct = new this.productModel({
-      productId,
-      productType,
-      gender,
-      productShoeSize,
-      productSize,
-      productSizePantsWaist,
-      productSizePantsInseam,
-      productDescriptionOptional,
-      productImage,
-    });
-    const result = await newProduct.save();
-    return result._id;
+  async createProduct(product: Product): Promise<Product> {
+    const newProduct = Object.assign(product);
+    return await this.productModel.create(newProduct);
   }
 
-  async findAll(): Promise<ProductDocument[]> {
+  async findAll(): Promise<Product[]> {
     const products = await this.productModel.find().exec();
     if (!products || products.length === 0) {
       throw new NotFoundException('No products found');
@@ -43,79 +20,23 @@ export class ProductsService {
     return products;
   }
 
-  async findOne(id: string): Promise<ProductDocument> {
+  async findOne(id: string): Promise<Product> {
     const product = await this.productModel.findById(id).exec();
     if (!product || product === null) {
       throw new NotFoundException(`Product ${id} not found`);
     }
-    return {
-      productId: product.productId,
-      productType: product.productType,
-      gender: product.gender,
-      productShoeSize: product.productShoeSize,
-      productSize: product.productSize,
-      productSizePantsWaist: product.productSizePantsWaist,
-      productSizePantsInseam: product.productSizePantsInseam,
-      productDescriptionOptional: product.productDescriptionOptional,
-      productImage: product.productImage,
-    } as ProductDocument;
+    return product;
   }
 
-  async updateProduct(
-    id: string, 
-    productId: string,
-    productType: [],
-    gender: [],
-    productShoeSize: [],
-    productSize: [],
-    productSizePantsWaist: [],
-    productSizePantsInseam: [],
-    productDescriptionOptional: string,
-    productImage: string,
-    ) {
-    const updatedProduct = await this.productModel.findById(id).exec();
-    if (!updatedProduct || updatedProduct === null) {
+  async updateProduct(id: string, product: Product): Promise<Product> {
+    // update product
+    if (!product || product === null) {
       throw new NotFoundException(`Product ${id} not found`);
     }
-    if (productId) {
-      console.log('productId ', productId);
-      updatedProduct.productId = productId;
-    }
-    if (productType) {
-      console.log('productType ', productType);
-      updatedProduct.productType = productType;
-    }
-    if (gender) {
-      console.log('gender ', gender);
-      updatedProduct.gender = gender;
-    }
-    if (productShoeSize) {
-      console.log('productShoeSize ', productShoeSize);
-      updatedProduct.productShoeSize = productShoeSize;
-    }
-    if (productSize) {
-      console.log('productSize ', productSize);
-      updatedProduct.productSize = productSize;
-    }
-    if (productSizePantsWaist) {
-      console.log('productSizePantsWaist ', productSizePantsWaist);
-      updatedProduct.productSizePantsWaist = productSizePantsWaist;
-    }
-    if (productSizePantsInseam) {
-      console.log('productSizePantsInseam ', productSizePantsInseam);
-      updatedProduct.productSizePantsInseam = productSizePantsInseam;
-    }
-    if (productDescriptionOptional) {
-      console.log('productDescriptionOptional ', productDescriptionOptional);
-      updatedProduct.productDescriptionOptional = productDescriptionOptional;
-    }
-    if (productImage) {
-      console.log('productImage ', productImage);
-      updatedProduct.productImage = productImage;
-    }
-    const updated = await updatedProduct.save();
-    console.log(updated);
-    return updated;
+    return await this.productModel.findByIdAndUpdate(id, product, {
+      new: true,
+      runValidators: true,
+    }).exec();
   }
 }
 

@@ -1,11 +1,12 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Role, UserDocument } from 'src/user/types/user.model';
+import { User } from 'src/user/schemas/user.schema';
+import { Role } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectModel('User') private userModel: Model<UserDocument>) {
+    constructor(@InjectModel('User') private userModel: Model<User>) {
         // User defined in user.module.ts
       }
       async addUser(name: string, email: string, role: string): Promise<string> {
@@ -17,7 +18,7 @@ export class UserService {
     
       async getAllUsers(): Promise<any> {
         //fix: Use serialization to mask password, so we don't have to transform the data
-        const users: UserDocument[] = await this.userModel.find().exec();
+        const users: User[] = await this.userModel.find().exec();
         return users.map((user) => ({
           id: user.id,
           name: user.name,
@@ -25,9 +26,9 @@ export class UserService {
           role: user.role,
         }));
       }
-      async getUserById(id: string): Promise<UserDocument> {
+      async getUserById(id: string): Promise<User> {
         console.log('service id: ', id);
-        let user: UserDocument;
+        let user: User;
         try {
           user = await this.userModel.findById(id).exec();
         } catch (error) {
@@ -41,11 +42,11 @@ export class UserService {
           name: user.name,
           email: user.email,
           role: user.role,
-        } as UserDocument;
+        } as User;
       }
     
-      async getUserByEmail(email: string): Promise<UserDocument> {
-        let user: UserDocument;
+      async getUserByEmail(email: string): Promise<User> {
+        let user: User;
         try {
           user = await this.userModel.findOne({ email: email });
           console.log(user);
