@@ -15,9 +15,6 @@ export class Product {
     createByUserID: string;
 
     @Prop()
-    productId: string;
-
-    @Prop()
     productType: [];
 
     @Prop()

@@ -1,4 +1,4 @@
-import { IsString, IsEmpty, IsOptional } from 'class-validator';
+import { IsString, IsEmpty, IsOptional, IsArray } from 'class-validator';
 
 export class UpdateProductDto {
     @IsOptional()
@@ -6,31 +6,27 @@ export class UpdateProductDto {
     readonly createByUserID: string;
 
     @IsOptional()
-    @IsString()
-    readonly productId: string;
-
-    @IsOptional()
-    @IsString()
+    @IsArray()
     readonly productType: [];
 
     @IsOptional()
-    @IsString()
+    @IsArray()
     readonly gender: [];
 
     @IsOptional()
-    @IsString()
+    @IsArray()
     readonly productShoeSize: [];
 
     @IsOptional()
-    @IsString()
+    @IsArray()
     readonly productSize: [];
 
     @IsOptional()
-    @IsString()
+    @IsArray()
     readonly productSizePantsWaist: [];
 
     @IsOptional()
-    @IsString()
+    @IsArray()
     readonly productSizePantsInseam: [];
 
     @IsOptional()
