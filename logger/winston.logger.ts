@@ -11,8 +11,8 @@ const customFormat = format.combine(
             }
         }
     ), 
-    (format.printf(({timestamp, level, stack, message}) => {
-        return `${timestamp} - [${level.toUpperCase()}] - ${message}  -- (stack: ${stack})`
+    (format.printf(({timestamp, level, stack, context, message}) => {
+        return `${timestamp} - [${level.toUpperCase().padEnd(7)}] - ${message}  -- (stack/context: ${stack || context})`
     }))
 )
 

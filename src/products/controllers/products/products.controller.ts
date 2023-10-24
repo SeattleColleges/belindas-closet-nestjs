@@ -3,6 +3,7 @@ import {
     Controller,
     Get,
     HttpStatus,
+    Logger,
     Param,
     Post,
     Res,
@@ -13,6 +14,10 @@ import { CreateProductDto } from 'src/products/dto/create-product.dto';
 import { UpdateProductDto } from 'src/products/dto/update-product.dto';
   @Controller('products')
   export class ProductsController {
+
+    private readonly logger = new Logger;
+    CONTROLLER: string = ProductsController.name;
+
     constructor(private readonly productService: ProductsService) {}
   
     @Post('new')
@@ -51,7 +56,7 @@ import { UpdateProductDto } from 'src/products/dto/update-product.dto';
     async findByID( 
     @Res() response, 
     @Param('id') id: string) {
-      console.log(id);
+      this.logger.log(`Finding Product with id: ${id}`, this.CONTROLLER);
       try {
         const product = await this.productService.findOne(id);
         return response.status(HttpStatus.OK).json({
@@ -59,6 +64,7 @@ import { UpdateProductDto } from 'src/products/dto/update-product.dto';
           product: product,
         });
       } catch (error) {
+        this.logger.error(`Product not found, error message: ${error.message}`, this.CONTROLLER);
         return response.status(HttpStatus.NOT_FOUND).json({
           message: "Product not found, please try again",
           error: error.message,
