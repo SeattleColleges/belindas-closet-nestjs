@@ -13,7 +13,7 @@ export class ProductsService {
   ) {}
 
   async createProduct(product: Product): Promise<Product> {
-    this.logger.log(`Creating Product: ${product}`, this.SERVICE);
+    this.logger.log(`Creating Product: ${JSON.stringify(product, null, '\t')}`, this.SERVICE);
     const newProduct = Object.assign(product);
     return await this.productModel.create(newProduct);
   }
@@ -35,11 +35,15 @@ export class ProductsService {
       this.logger.warn('Product not found')
       throw new NotFoundException(`Product ${id} not found`, this.SERVICE);
     }
+    this.logger.log(`Product found: ${JSON.stringify(product, null, '\t')}`, this.SERVICE);
     return product;
   }
 
   async updateProduct(id: string, product: Product): Promise<Product> {
-    this.logger.log(`Updating Product with id: ${id} with: ${product}`, this.SERVICE);
+    this.logger.log(
+      `Updating Product with id: ${id} with: ${JSON.stringify(product, null, '\t')}`,
+      this.SERVICE
+    );
     if (!product || product === null) {
       this.logger.warn('Product not found')
       throw new NotFoundException(`Product ${id} not found`);

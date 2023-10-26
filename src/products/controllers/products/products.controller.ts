@@ -23,7 +23,7 @@ export class ProductsController {
   
   @Post('new')
   async createProduct(@Body() productDto: CreateProductDto, @Res() response) {
-    this.logger.log(`Creating Product ${productDto}`, this.CONTROLLER)
+    this.logger.log(`Creating Product ${JSON.stringify(productDto, null, '\t')}`, this.CONTROLLER)
     try {
       const newProduct = await this.productService.createProduct(productDto);
       return response.status(HttpStatus.CREATED).json({
@@ -81,7 +81,10 @@ export class ProductsController {
     @Param('id') id: string,
     @Body() productDto: UpdateProductDto,
   ) {
-    this.logger.log(`Updating Product with id: ${id} with: ${productDto}`, this.CONTROLLER);
+    this.logger.log(
+      `Updating Product with id: ${id} with: ${JSON.stringify(productDto, null, '\t')}`, 
+      this.CONTROLLER
+    );
     try {
       const updatedProduct = await this.productService.updateProduct(id, productDto);
       return response.status(HttpStatus.OK).json({
