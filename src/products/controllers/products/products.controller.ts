@@ -13,12 +13,15 @@ import { ProductsService } from 'src/products/services/products/products.service
 import { CreateProductDto } from 'src/products/dto/create-product.dto';
 import { UpdateProductDto } from 'src/products/dto/update-product.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { RoleGuard } from 'src/auth/role.guard';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productService: ProductsService) { }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('new')
   async createProduct(@Body() productDto: CreateProductDto, @Res() response) {
     try {
@@ -70,7 +73,8 @@ export class ProductsController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('update/:id')
   async updateProductById(
     @Res() response,
@@ -93,8 +97,9 @@ export class ProductsController {
 }
 
 // we will more than likely change this delete function to an update sort of like a soft-delete. ex. isDeleted = true
-
-//  @UseGuards(JwtAuthGuard)
+//
+//  @Roles('admin')
+//  @UseGuards(JwtAuthGuard, RoleGuard)
 //   @Delete('remove/:id')
 //   async deleteProduct(@Res() response, @Param('id') id: string) {
 //     try {
