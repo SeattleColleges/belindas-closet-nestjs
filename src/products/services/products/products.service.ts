@@ -2,10 +2,11 @@ import { NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Product } from 'src/products/schemas/product.schema';
+
 export class ProductsService {
   constructor(
     @InjectModel('Product') private productModel: Model<Product>,
-  ) {}
+  ) { }
 
   async createProduct(product: Product): Promise<Product> {
     const newProduct = Object.assign(product);
