@@ -7,15 +7,18 @@ import {
   Post,
   Res,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from 'src/products/services/products/products.service';
 import { CreateProductDto } from 'src/products/dto/create-product.dto';
 import { UpdateProductDto } from 'src/products/dto/update-product.dto';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productService: ProductsService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post('new')
   async createProduct(@Body() productDto: CreateProductDto, @Res() response) {
     try {
@@ -67,6 +70,7 @@ export class ProductsController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('update/:id')
   async updateProductById(
     @Res() response,
@@ -90,6 +94,7 @@ export class ProductsController {
 
 // we will more than likely change this delete function to an update sort of like a soft-delete. ex. isDeleted = true
 
+//  @UseGuards(JwtAuthGuard)
 //   @Delete('remove/:id')
 //   async deleteProduct(@Res() response, @Param('id') id: string) {
 //     try {
