@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { ProductsModule } from './products/products.module';
@@ -19,6 +19,6 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.register({ secret: 'secret', signOptions: { expiresIn: '4h' } })
   ],
   controllers: [],
-  providers: [],
+  providers: [Logger],
 })
 export class AppModule {}
