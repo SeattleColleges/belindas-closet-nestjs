@@ -9,8 +9,8 @@ export class ProductsService {
   SERVICE: string = ProductsService.name;
   
   constructor(
-    @InjectModel('Product') private productModel: Model<Product>
-  ) {}
+    @InjectModel('Product') private productModel: Model<Product>,
+  ) { }
 
   async createProduct(product: Product): Promise<Product> {
     this.logger.log(`Creating Product: ${JSON.stringify(product, null, '\t')}`, this.SERVICE);
