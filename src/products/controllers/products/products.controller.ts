@@ -1,17 +1,21 @@
 import {
-    Body,
-    Controller,
-    Get,
-    HttpStatus,
-    Logger,
-    Param,
-    Post,
-    Res,
-    Put,
-  } from '@nestjs/common';
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Logger,
+  Param,
+  Post,
+  Res,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { ProductsService } from 'src/products/services/products/products.service';
 import { CreateProductDto } from 'src/products/dto/create-product.dto';
 import { UpdateProductDto } from 'src/products/dto/update-product.dto';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { RoleGuard } from 'src/auth/role.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -19,8 +23,10 @@ export class ProductsController {
   private readonly logger = new Logger;
   CONTROLLER: string = ProductsController.name;
 
-  constructor(private readonly productService: ProductsService) {}
+  constructor(private readonly productService: ProductsService) { }
   
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('new')
   async createProduct(@Body() productDto: CreateProductDto, @Res() response) {
     this.logger.log(`Creating Product ${JSON.stringify(productDto, null, '\t')}`, this.CONTROLLER)
@@ -75,6 +81,8 @@ export class ProductsController {
     }
   }
 
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('update/:id')
   async updateProductById(
     @Res() response,
@@ -103,6 +111,8 @@ export class ProductsController {
   
   // we will more than likely change this delete function to an update sort of like a soft-delete. ex. isDeleted = true
 
+  //  @Roles('admin')
+  //  @UseGuards(JwtAuthGuard, RoleGuard)
   //   @Delete('remove/:id')
   //   async deleteProduct(@Res() response, @Param('id') id: string) {
   //     try {
