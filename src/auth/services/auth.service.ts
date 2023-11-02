@@ -74,7 +74,7 @@ export class AuthService {
     return hashedKey;
   }
 
-  async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<void> {
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
     const { email } = forgotPasswordDto;
 
     // check if user exists
@@ -97,5 +97,6 @@ export class AuthService {
     // for now, we will just log it to the console
     
     console.log(`New token: ${newToken}`);
+    return { newToken }
   }
 }
