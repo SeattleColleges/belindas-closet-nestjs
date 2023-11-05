@@ -9,13 +9,14 @@ import {
   Res,
   Put,
   UseGuards,
+  Inject,
 } from '@nestjs/common';
-import { ProductsService } from 'src/products/services/products/products.service';
-import { CreateProductDto } from 'src/products/dto/create-product.dto';
-import { UpdateProductDto } from 'src/products/dto/update-product.dto';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
-import { Roles } from 'src/auth/roles.decorator';
-import { RoleGuard } from 'src/auth/role.guard';
+import { ProductsService } from '../../services/products/products.service';
+import { CreateProductDto } from '../../dto/create-product.dto';
+import { UpdateProductDto } from '../../dto/update-product.dto';
+import { JwtAuthGuard } from '../../../auth/jwt.guard';
+import { Roles } from '../../../auth/roles.decorator';
+import { RoleGuard } from '../../../auth/role.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -23,7 +24,7 @@ export class ProductsController {
   private readonly logger = new Logger;
   CONTROLLER: string = ProductsController.name;
 
-  constructor(private readonly productService: ProductsService) { }
+  constructor(@Inject('PRODUCTS_SERVICE') private readonly productService: ProductsService) { }
   
   @Roles('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
