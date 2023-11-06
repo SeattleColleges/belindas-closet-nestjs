@@ -74,7 +74,9 @@ export class AuthService {
     return hashedKey;
   }
 
+  // forgot password function
   async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+
     const { email } = forgotPasswordDto;
 
     // check if user exists
