@@ -6,6 +6,7 @@ import { SignUpDto } from '../dto/signup.dto';
 import { LoginDto } from '../dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -71,5 +72,30 @@ export class AuthService {
     const key = `${email}-${role}-${process.env.PRODUCT_KEY}`;
     const hashedKey = bcrypt.hashSync(key, 10);
     return hashedKey;
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<void> {
+    const { email } = forgotPasswordDto;
+
+    // check if user exists
+    const user = await this.userModel.findOne({ email });
+
+    if (!user) {
+      throw new HttpException('User does not exist', 404);
+    }
+
+    // generate new Token
+    const newToken = this.jwtService.sign({
+      message: 'Reset password',
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+
+    // we can send the token to the user's email
+    // for now, we will just log it to the console
+    
+    console.log(`New token: ${newToken}`);
   }
 }
