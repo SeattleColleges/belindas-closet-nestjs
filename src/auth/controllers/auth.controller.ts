@@ -3,6 +3,7 @@ import { LoginDto } from '../dto/login.dto';
 import { SignUpDto } from '../dto/signup.dto';
 import { AuthService } from '../services/auth.service';
 import { Body, Controller, Post } from '@nestjs/common';
+import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,5 +25,11 @@ export class AuthController {
         const userEmail = productKeyDto.email;
         const userRole = productKeyDto.role;
         return this.authService.generateProductKey(userEmail, userRole);
+    }
+
+    // forgot password route
+    @Post('/forgot-password')
+    forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto): Promise<{ newToken: string }> {
+        return this.authService.forgotPassword(forgotPasswordDto);
     }
 }
