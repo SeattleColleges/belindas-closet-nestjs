@@ -4,6 +4,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import { instance } from 'logger/winston.logger';
 
+// comment testing out CI pr-workflow
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: WinstonModule.createLogger({
