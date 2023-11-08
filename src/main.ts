@@ -5,6 +5,8 @@ import { WinstonModule } from 'nest-winston';
 import { instance } from 'logger/winston.logger';
 
 // comment testing out CI pr-workflow
+// making a new commit with an open pr
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
