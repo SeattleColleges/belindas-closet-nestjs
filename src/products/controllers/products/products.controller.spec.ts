@@ -11,7 +11,8 @@ describe('ProductsController', () => {
   let mockResponse: Response;
 
   let mockService = {
-    createProduct: jest.fn((x) => x)
+    createProduct: jest.fn(),
+    findAll: jest.fn()
   }
 
   let mockProduct = {
@@ -57,17 +58,24 @@ describe('ProductsController', () => {
       'should call the createProduct method of the service and throw an error',
       async () => {
         let response = await controller.createProduct(mockProduct, mockResponse);
-        expect(mockService.createProduct).toHaveBeenCalledWith(mockProduct);
+        //can add values to properties and expect it to fail
+        /* expect(service.createProduct).toHaveBeenCalledWith({
+          createByUserID: '',
+          productType: [],
+          gender: [],
+          productShoeSize: [],
+          productSize: [],
+          productSizePantsWaist: [],
+          productSizePantsInseam: [],
+          productDescriptionOptional: 'string',
+          productImage: 'string',
+        }); */
+        //can run this test with a different string and expect it to fail
+        //expect(response.message).toEqual("Failed to create product");
+        expect(service.createProduct).toHaveBeenCalledWith(mockProduct);
         expect(response.message).toEqual("Failed to create product, please try again");
       }
     );
   });
-
-  /* describe('getProducts', () => {
-    it('getProducts', async () => {
-      let response = await controller.getProducts(mockResponse);
-      console.log(response);
-    });
-  }); */
 
 });

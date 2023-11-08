@@ -10,7 +10,7 @@ export class ProductsService {
   SERVICE: string = ProductsService.name;
   
   constructor(
-    @InjectModel('Product') private productModel: Model<Product>,
+    @InjectModel(Product.name) private productModel: Model<Product>,
   ) { }
 
   async createProduct(product: Product): Promise<Product> {
