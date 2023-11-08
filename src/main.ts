@@ -6,6 +6,7 @@ import { instance } from 'logger/winston.logger';
 
 // comment testing out CI pr-workflow
 // making a new commit with an open pr
+// new comment after updating CI pr-workflow.yml file
 
 
 async function bootstrap() {
