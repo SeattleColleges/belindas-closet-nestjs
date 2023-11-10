@@ -11,15 +11,6 @@ export class UserService {
   SERVICE: string = UserService.name;
 
   constructor(@InjectModel('User') private userModel: Model<User>) {}
-
-  async addUser(name: string, email: string, role: string): Promise<string> {
-    this.logger.log(`Adding user with name: ${name}, email: ${email}, and role: ${role}`, this.SERVICE);
-    const newUser = new this.userModel({ name, email, role }); // doc will be expanded to name: name etc.
-    const result = await newUser.save();
-    // return mongodb generated id note the underscore.
-    this.logger.log(`User added with generated id: ${result._id}`, this.SERVICE);
-    return result._id;
-  }
     
   async getAllUsers(): Promise<any> {
     this.logger.log('Getting all Users', this.SERVICE);

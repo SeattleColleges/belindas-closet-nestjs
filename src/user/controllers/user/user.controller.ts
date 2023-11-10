@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Param, Patch } from '@nestjs/common';
 import { UserService } from 'src/user/services/user/user.service';
 import { Role } from 'src/user/schemas/user.schema';
 
@@ -9,18 +9,6 @@ export class UserController {
   CONTROLLER: string = UserController.name;
 
   constructor(private readonly userService: UserService) {}
-
-  @Post('add')
-  async addUser(
-    @Body('name') name: string,
-    @Body('email') email: string,
-    @Body('role') role: string,
-  ) {
-    this.logger.log(`Adding User with name: ${name}, enail: ${email}, and role: ${role}`, this.CONTROLLER);
-    const generatedId = await this.userService.addUser(name, email, role);
-    this.logger.log(`Generated id: ${generatedId}`, this.CONTROLLER);
-    return { id: generatedId };
-  }
   
   @Get('')
   async getAllUsers() {
