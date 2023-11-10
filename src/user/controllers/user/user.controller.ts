@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Logger, Param, Patch } from '@nestjs/common';
 import { UserService } from 'src/user/services/user/user.service';
-import { Role } from 'src/user/schemas/user.schema';
+import { User } from 'src/user/schemas/user.schema';
+import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -29,16 +30,11 @@ export class UserController {
   }
     
   @Patch('update/:id')
-  async updateUser(
-    @Param('id') id: string,
-    @Body('name') name: string,
-    @Body('email') email: string,
-    @Body('role') role: Role,
-  ) {
+  async updateUser(@Param('id') id: string, @Body() userDto: UpdateUserDto) {
     this.logger.log(
-      `Updating User with id: ${id} with name: ${name}, email: ${email}, and role: ${role}`,
+      `Updating User with id: ${id} with user: ${JSON.stringify(userDto, null, '\t')}`,
       this.CONTROLLER
     );
-    await this.userService.updateUser(id, name, email, role);
+    return await this.userService.updateUser(id, userDto as User);
   }
 }

@@ -1,8 +1,7 @@
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
-import { Role } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class UserService {
@@ -62,23 +61,18 @@ export class UserService {
     return user;
   }
 
-  async updateUser(id: string, name: string, email: string, role: Role) {
-    this.logger.log(`Updating User with id: ${id}`, this.SERVICE);
-    const updatedUser = await this.userModel.findById(id).exec();
-    if (name) {
-      this.logger.log(`Updating User name to: ${name}`, this.SERVICE);
-      updatedUser.name = name;
+  async updateUser(id: string, user: User): Promise<User> {
+    this.logger.log(
+      `Updating User with id: ${id} with: ${JSON.stringify(user, null, '\t')}`,
+      this.SERVICE
+    );
+    if (user === null) {
+      this.logger.warn('Requires a User with updated properties')
+      throw new BadRequestException(`Updated User not supplied`);
     }
-    if (email) {
-      this.logger.log(`Updating User email to ${email}`, this.SERVICE);
-      updatedUser.email = email;
-    }
-    if (role) {
-      this.logger.log(`Updating User role to ${role}`, this.SERVICE);
-      updatedUser.role = role;
-    }
-    const updated = await updatedUser.save();
-    this.logger.log(`Updated User: ${updated}`, this.SERVICE);
-    return updated;
+    return await this.userModel.findByIdAndUpdate(id, user, {
+      new: true,
+      runValidators: true
+    }).exec();
   }
 }
