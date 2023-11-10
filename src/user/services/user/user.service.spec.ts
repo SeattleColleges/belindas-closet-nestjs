@@ -35,17 +35,17 @@ describe('UserService', () => {
     expect(model).toBeDefined();
   });
 
-  describe('addUser', () => {
+  /* describe('addUser', () => {
     it('create a new user model and save it, returning the generated id', async () => {
 
     });
-  });
+  }); */
 
-  describe('getAllUsers', () => {});
+  //describe('getAllUsers', () => {});
 
-  describe('getUserById', () => {});
+  //describe('getUserById', () => {});
 
-  describe('getUserByEmail', () => {});
+  //describe('getUserByEmail', () => {});
 
-  describe('updateUser', () => {});
+  //describe('updateUser', () => {});
 });
