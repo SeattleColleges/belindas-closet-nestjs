@@ -12,12 +12,13 @@ export class UserController {
 
   @Post('add')
   async addUser(
-    @Body('name') name: string,
+    @Body('firstName') firstName: string,
+    @Body('lastName') lastName: string,
     @Body('email') email: string,
-    @Body('role') role: string,
+    @Body('role') role: Role,
   ) {
-    this.logger.log(`Adding User with name: ${name}, enail: ${email}, and role: ${role}`, this.CONTROLLER);
-    const generatedId = await this.userService.addUser(name, email, role);
+    this.logger.log(`Adding User with first name: ${firstName}, last name ${lastName}, email: ${email}, and role: ${role}`, this.CONTROLLER);
+    const generatedId = await this.userService.addUser(firstName, lastName, email, role);
     this.logger.log(`Generated id: ${generatedId}`, this.CONTROLLER);
     return { id: generatedId };
   }
@@ -43,14 +44,15 @@ export class UserController {
   @Patch('update/:id')
   async updateUser(
     @Param('id') id: string,
-    @Body('name') name: string,
+    @Body('firstName') firstName: string,
+    @Body('lastName') lastName: string,
     @Body('email') email: string,
     @Body('role') role: Role,
   ) {
     this.logger.log(
-      `Updating User with id: ${id} with name: ${name}, email: ${email}, and role: ${role}`,
+      `Updating User with id: ${id} with first name: ${firstName}, last name: ${lastName}  email: ${email}, and role: ${role}`,
       this.CONTROLLER
     );
-    await this.userService.updateUser(id, name, email, role);
+    await this.userService.updateUser(id, firstName, lastName, email, role);
   }
 }
