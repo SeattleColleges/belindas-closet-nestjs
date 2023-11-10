@@ -5,7 +5,11 @@ export class UpdateUserDto {
 
     @IsOptional()
     @IsString()
-    readonly name: string;
+    readonly firstName: string;
+
+    @IsOptional()
+    @IsString()
+    readonly lastName: string;
 
     
     @IsOptional()
