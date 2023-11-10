@@ -12,9 +12,9 @@ export class UserService {
 
   constructor(@InjectModel('User') private userModel: Model<User>) {}
 
-  async addUser(name: string, email: string, role: string): Promise<string> {
-    this.logger.log(`Adding user with name: ${name}, email: ${email}, and role: ${role}`, this.SERVICE);
-    const newUser = new this.userModel({ name, email, role }); // doc will be expanded to name: name etc.
+  async addUser(firstName: string, lastName: string, email: string, role: string): Promise<string> {
+    this.logger.log(`Adding user with first name: ${firstName}, last name: ${lastName}, email: ${email}, and role: ${role}`, this.SERVICE);
+    const newUser = new this.userModel({ firstName, lastName, email, role }); // doc will be expanded to name: name etc.
     const result = await newUser.save();
     // return mongodb generated id note the underscore.
     this.logger.log(`User added with generated id: ${result._id}`, this.SERVICE);
@@ -27,7 +27,8 @@ export class UserService {
     const users: User[] = await this.userModel.find().exec();
     return users.map((user) => ({
       id: user.id,
-      name: user.name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       role: user.role,
     }));
@@ -48,7 +49,8 @@ export class UserService {
     }
     return {
       id: user.id,
-      name: user.name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       role: user.role,
     } as User;
@@ -71,12 +73,16 @@ export class UserService {
     return user;
   }
 
-  async updateUser(id: string, name: string, email: string, role: Role) {
+  async updateUser(id: string, firstName: string, lastName: string, email: string, role: Role) {
     this.logger.log(`Updating User with id: ${id}`, this.SERVICE);
     const updatedUser = await this.userModel.findById(id).exec();
-    if (name) {
-      this.logger.log(`Updating User name to: ${name}`, this.SERVICE);
-      updatedUser.name = name;
+    if (firstName) {
+      this.logger.log(`Updating User name to: ${firstName}`, this.SERVICE);
+      updatedUser.firstName = firstName;
+    }
+    if (lastName) {
+      this.logger.log(`Updating User name to: ${lastName}`, this.SERVICE);
+      updatedUser.lastName = lastName;
     }
     if (email) {
       this.logger.log(`Updating User email to ${email}`, this.SERVICE);
