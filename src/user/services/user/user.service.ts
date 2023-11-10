@@ -1,8 +1,8 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from 'src/user/schemas/user.schema';
-import { Role } from 'src/user/schemas/user.schema';
+import { User } from '../../schemas/user.schema';
+import { Role } from '../../schemas/user.schema';
 
 @Injectable()
 export class UserService {
@@ -10,7 +10,7 @@ export class UserService {
   private readonly logger = new Logger;
   SERVICE: string = UserService.name;
 
-  constructor(@InjectModel('User') private userModel: Model<User>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async addUser(name: string, email: string, role: string): Promise<string> {
     this.logger.log(`Adding user with name: ${name}, email: ${email}, and role: ${role}`, this.SERVICE);
