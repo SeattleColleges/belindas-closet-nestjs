@@ -17,7 +17,7 @@ export class AuthService {
   ) {}
 
   async signUp(signUpDto: SignUpDto) {
-    const { name, email, password, role } = signUpDto;
+    const { firstName, lastName, email, password, role } = signUpDto;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await this.userModel.findOne({ email });
@@ -25,7 +25,8 @@ export class AuthService {
       throw new HttpException('Email already exists', 400);
     }
     const newUser = await this.userModel.create({
-      name,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
       role,
@@ -34,7 +35,8 @@ export class AuthService {
     const token = this.jwtService.sign({
       message: 'Sign up successfully',
       id: newUser._id,
-      name: newUser.name,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
       email: newUser.email,
       role: newUser.role,
     });
@@ -60,7 +62,8 @@ export class AuthService {
     const token = this.jwtService.sign({
       message: 'Login successful',
       id: user._id,
-      name: user.name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       role: user.role,
     });
@@ -90,7 +93,8 @@ export class AuthService {
     const newToken = this.jwtService.sign({
       message: 'Reset password',
       id: user._id,
-      name: user.name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       role: user.role,
     });
