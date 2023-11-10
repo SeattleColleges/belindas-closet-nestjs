@@ -8,6 +8,8 @@ import { instance } from 'logger/winston.logger';
 // making a new commit with an open pr
 // new comment after updating CI pr-workflow.yml file
 
+// here is a comment as directed in the testing for PR #43 - Courtney
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
