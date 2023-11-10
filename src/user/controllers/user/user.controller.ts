@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Logger, Param, Patch, Post } from '@nestjs/common';
-import { UserService } from 'src/user/services/user/user.service';
-import { Role } from 'src/user/schemas/user.schema';
+import { Body, Controller, Get, Inject, Logger, Param, Patch, Post } from '@nestjs/common';
+import { UserService } from '../../services/user/user.service';
+import { Role } from '../../schemas/user.schema';
 
 @Controller('user')
 export class UserController {
@@ -8,7 +8,7 @@ export class UserController {
   private readonly logger = new Logger;
   CONTROLLER: string = UserController.name;
 
-  constructor(private readonly userService: UserService) {}
+  constructor(@Inject('USER_SERVICE') private readonly userService: UserService) {}
 
   @Post('add')
   async addUser(
