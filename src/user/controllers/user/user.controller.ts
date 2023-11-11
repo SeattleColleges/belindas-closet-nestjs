@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Logger, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Param, Patch } from '@nestjs/common';
 import { UserService } from 'src/user/services/user/user.service';
-import { Role } from 'src/user/schemas/user.schema';
+import { User } from 'src/user/schemas/user.schema';
+import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -9,19 +10,6 @@ export class UserController {
   CONTROLLER: string = UserController.name;
 
   constructor(private readonly userService: UserService) {}
-
-  @Post('add')
-  async addUser(
-    @Body('firstName') firstName: string,
-    @Body('lastName') lastName: string,
-    @Body('email') email: string,
-    @Body('role') role: Role,
-  ) {
-    this.logger.log(`Adding User with first name: ${firstName}, last name ${lastName}, email: ${email}, and role: ${role}`, this.CONTROLLER);
-    const generatedId = await this.userService.addUser(firstName, lastName, email, role);
-    this.logger.log(`Generated id: ${generatedId}`, this.CONTROLLER);
-    return { id: generatedId };
-  }
   
   @Get('')
   async getAllUsers() {
@@ -42,17 +30,11 @@ export class UserController {
   }
     
   @Patch('update/:id')
-  async updateUser(
-    @Param('id') id: string,
-    @Body('firstName') firstName: string,
-    @Body('lastName') lastName: string,
-    @Body('email') email: string,
-    @Body('role') role: Role,
-  ) {
+  async updateUser(@Param('id') id: string, @Body() userDto: UpdateUserDto) {
     this.logger.log(
-      `Updating User with id: ${id} with first name: ${firstName}, last name: ${lastName}  email: ${email}, and role: ${role}`,
+      `Updating User with id: ${id} with user: ${JSON.stringify(userDto, null, '\t')}`,
       this.CONTROLLER
     );
-    await this.userService.updateUser(id, firstName, lastName, email, role);
+    return await this.userService.updateUser(id, userDto as User);
   }
 }
