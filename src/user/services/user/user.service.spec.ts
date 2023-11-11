@@ -114,13 +114,13 @@ describe('UserService', () => {
         ...mockUser,
         firstName: 'Updated',
         lastName: 'Name'
-      };
+      } as User;
       jest
         .spyOn(model, 'findByIdAndUpdate')
         .mockImplementation(() => ({
           exec: jest.fn().mockResolvedValue(updatedUser)
         } as any));
-      const result = await service.updateUser(mockUser.id, updatedUser as any);
+      const result = await service.updateUser(mockUser.id, updatedUser);
       expect(model.findByIdAndUpdate).toHaveBeenCalledWith(
         mockUser.id,
         updatedUser,
