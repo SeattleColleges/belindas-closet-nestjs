@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { Product } from '../../schemas/product.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { NotFoundException } from '@nestjs/common';
-import { CreateProductDto } from 'src/products/dto/create-product.dto';
 
 describe('ProductsService', () => {
   let service: ProductsService;
@@ -59,7 +58,7 @@ describe('ProductsService', () => {
       jest
         .spyOn(model, 'create')
         .mockImplementationOnce(() => (Promise.resolve(newProduct) as any));
-      const result = await service.createProduct(newProduct as unknown as CreateProductDto);
+      const result = await service.createProduct(newProduct as any);
       expect(result).toEqual(newProduct);
     });
   });
