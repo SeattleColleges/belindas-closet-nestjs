@@ -53,15 +53,16 @@ export class ProductsService {
       runValidators: true,
     }).exec();
   }
-}
+// }
 
 // we will more than likely change this delete function to an update sort of like a soft-delete. ex. isDeleted = true
 
-//   async delete(id: string): Promise<Product> {
-//     const deletedProduct = await this.productModel.findByIdAndDelete(id);
-//     if (!deletedProduct || deletedProduct === null) {
-//       throw new NotFoundException(`Product ${id} not found`);
-//     }
-//     return deletedProduct;
-//   }
-// }
+  async delete(id: string): Promise<Product> {
+    const deletedProduct = await this.productModel.findByIdAndUpdate(id, { isHidden: true });
+    if (!deletedProduct || deletedProduct === null) {
+      throw new NotFoundException(`Product ${id} not found`);
+    }
+    return deletedProduct;
+  }
+}
+

@@ -9,6 +9,7 @@ import {
   Res,
   Put,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { ProductsService } from 'src/products/services/products/products.service';
 import { CreateProductDto } from 'src/products/dto/create-product.dto';
@@ -107,25 +108,26 @@ export class ProductsController {
       });
     }
   }
-}
+// }
   
   // we will more than likely change this delete function to an update sort of like a soft-delete. ex. isDeleted = true
 
-  //  @Roles('admin')
-  //  @UseGuards(JwtAuthGuard, RoleGuard)
-  //   @Delete('remove/:id')
-  //   async deleteProduct(@Res() response, @Param('id') id: string) {
-  //     try {
-  //       const deletedProduct = await this.productService.delete(id);
-  //       return response.status(HttpStatus.OK).json({
-  //         message: 'Product successfully deleted',
-  //         product: deletedProduct,
-  //       });
-  //     } catch (error) {
-  //       return response.status(HttpStatus.NOT_FOUND).json({
-  //         message: "Failed to delete product, please try again",
-  //         error: error.message,
-  //       });
-  //     }
-  //   }
-  // }
+   @Roles('admin')
+   @UseGuards(JwtAuthGuard, RoleGuard)
+    @Delete('remove/:id')
+    async deleteProduct(@Res() response, @Param('id') id: string) {
+      try {
+        const deletedProduct = await this.productService.delete(id);
+        return response.status(HttpStatus.OK).json({
+          message: 'Product successfully deleted',
+          product: deletedProduct,
+        });
+      } catch (error) {
+        return response.status(HttpStatus.NOT_FOUND).json({
+          message: "Failed to delete product, please try again",
+          error: error.message,
+        });
+      }
+    }
+  }
+
