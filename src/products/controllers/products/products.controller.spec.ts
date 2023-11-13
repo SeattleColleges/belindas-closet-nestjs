@@ -52,7 +52,7 @@ describe('ProductsController', () => {
     productSizePantsInseam: [],
     productDescriptionOptional: 'string',
     productImage: 'string',
-  } as unknown as Product
+  } as Product
 
 
   beforeEach(async () => {

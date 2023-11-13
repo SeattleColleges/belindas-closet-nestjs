@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 @Schema({
     timestamps: true,
@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 })
 
 
-export class Product {
+export class Product extends Document {
     @Prop ({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
