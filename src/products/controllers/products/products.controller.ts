@@ -15,7 +15,6 @@ import { UpdateProductDto } from '../../dto/update-product.dto';
 import { JwtAuthGuard } from '../../../auth/jwt.guard';
 import { Roles } from '../../../auth/roles.decorator';
 import { RoleGuard } from '../../../auth/role.guard';
-import { Product } from '../../schemas/product.schema';
 
 @Controller('products')
 export class ProductsController {
@@ -30,7 +29,7 @@ export class ProductsController {
   @Post('new')
   async createProduct(@Body() productDto: CreateProductDto) {
     this.logger.log(`Creating Product ${JSON.stringify(productDto, null, '\t')}`, this.CONTROLLER);
-    return await this.productService.createProduct(productDto as Product);
+    return await this.productService.createProduct(productDto);
   }
   
   @Get('')
@@ -53,10 +52,10 @@ export class ProductsController {
       `Updating Product with id: ${id} with: ${JSON.stringify(productDto, null, '\t')}`, 
       this.CONTROLLER
     );
-    return await this.productService.updateProduct(id, productDto as Product);
+    return await this.productService.updateProduct(id, productDto);
   }
 }
-  
+ 
   // we will more than likely change this delete function to an update sort of like a soft-delete. ex. isDeleted = true
 
   //  @Roles('admin')
