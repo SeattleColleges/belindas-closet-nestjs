@@ -53,9 +53,6 @@ export class ProductsService {
       runValidators: true,
     }).exec();
   }
-// }
-
-// we will more than likely change this delete function to an update sort of like a soft-delete. ex. isDeleted = true
 
   async delete(id: string): Promise<Product> {
     const deletedProduct = await this.productModel.findByIdAndUpdate(id, { isHidden: true });
