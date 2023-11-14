@@ -27,7 +27,8 @@ describe('ProductsService', () => {
     productSizePantsInseam: [],
     productDescriptionOptional: 'string',
     productImage: 'string',
-  }
+    isHidden: false
+  } as Product
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -138,7 +139,27 @@ describe('ProductsService', () => {
           runValidators: true,
         }
       );
-      expect(result.productType).toEqual(updatedProduct.productType);
+      expect(result).toEqual(updatedProduct);
+    });
+  });
+  
+  describe('delete', () => {
+    it('should call findByIdAndUpdate on the model and return a result', async () => {
+      const deletedProduct = {
+        ...mockProduct,
+        isHidden: true
+      };
+      jest
+        .spyOn(model, 'findByIdAndUpdate')
+        .mockReturnValue({
+          exec: jest.fn().mockResolvedValueOnce(deletedProduct)
+        } as any);
+      const result = await service.delete(mockProduct.id);
+      expect(model.findByIdAndUpdate).toHaveBeenCalledWith(
+        mockProduct.id,
+        { isHidden: true }
+      );
+      expect(result).toEqual(deletedProduct);
     });
   });
 });
