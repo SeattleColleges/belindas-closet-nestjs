@@ -40,6 +40,9 @@ export class Product {
 
     @Prop({ default: false })
     isHidden: boolean;
+
+    @Prop({ default: false })
+    isSold: boolean;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

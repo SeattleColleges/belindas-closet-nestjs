@@ -56,12 +56,19 @@ export class ProductsController {
   }
 
   // Soft Delete Button
-
-   @Roles('admin')
-   @UseGuards(JwtAuthGuard, RoleGuard)
-    @Delete('remove/:id')
-    async deleteProduct(@Param('id') id: string) {
-        return await this.productService.delete(id);
-    }
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Delete('remove/:id')
+  async deleteProduct(@Param('id') id: string) {
+    return await this.productService.delete(id);
   }
+
+  // Archive Button
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Put('archive/:id')
+  async archiveProduct(@Param('id') id: string) {
+    return await this.productService.archive(id);
+  }
+}
 

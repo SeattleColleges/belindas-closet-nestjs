@@ -61,5 +61,13 @@ export class ProductsService {
     }
     return deletedProduct;
   }
+
+  async archive(id: string): Promise<Product> {
+    const archivedProduct = await this.productModel.findByIdAndUpdate(id, { isSold: true });
+    if (!archivedProduct || archivedProduct === null) {
+      throw new NotFoundException(`Product ${id} not found`);
+    }
+    return archivedProduct;
+  }
 }
 

@@ -4,6 +4,7 @@ export class CreateProductDto {
     @IsEmpty({message: 'ID field is not required'})
     readonly createByUserID: string;
     isHidden: boolean;
+    isSold: boolean;
 
     @ArrayNotEmpty({message: 'Product Type field is required'})
     @ArrayNotContains([''], {message: 'Product Type field is required'})
