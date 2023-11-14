@@ -4,6 +4,7 @@ export class UpdateProductDto {
     @IsOptional()
     @IsEmpty({message: 'ID field is not required'})
     readonly createByUserID: string;
+    isHidden: boolean;
 
     @IsOptional()
     @IsArray()

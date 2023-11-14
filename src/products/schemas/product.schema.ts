@@ -37,6 +37,9 @@ export class Product {
 
     @Prop()
     productImage: string;
+
+    @Prop({ default: false })
+    isHidden: boolean;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
