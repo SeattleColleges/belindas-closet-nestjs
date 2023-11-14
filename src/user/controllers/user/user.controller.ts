@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Logger, Param, Patch } from '@nestjs/common';
-import { UserService } from 'src/user/services/user/user.service';
-import { User } from 'src/user/schemas/user.schema';
-import { UpdateUserDto } from 'src/user/dto/update-user.dto';
+import { Body, Controller, Get, Inject, Logger, Param, Patch } from '@nestjs/common';
+import { UserService } from '../../services/user/user.service';
+import { UpdateUserDto } from '../../dto/update-user.dto';
+import { User } from '../../schemas/user.schema';
 
 @Controller('user')
 export class UserController {
@@ -9,7 +9,7 @@ export class UserController {
   private readonly logger = new Logger;
   CONTROLLER: string = UserController.name;
 
-  constructor(private readonly userService: UserService) {}
+  constructor(@Inject('USER_SERVICE') private readonly userService: UserService) {}
   
   @Get('')
   async getAllUsers() {

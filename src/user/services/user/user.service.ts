@@ -1,7 +1,7 @@
 import { BadRequestException, HttpException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from 'src/user/schemas/user.schema';
+import { User } from '../../schemas/user.schema';
 
 @Injectable()
 export class UserService {
@@ -9,7 +9,7 @@ export class UserService {
   private readonly logger = new Logger;
   SERVICE: string = UserService.name;
 
-  constructor(@InjectModel('User') private userModel: Model<User>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
     
   async getAllUsers(): Promise<any> {
     this.logger.log('Getting all Users', this.SERVICE);
@@ -50,7 +50,7 @@ export class UserService {
     this.logger.log(`Getting User with email: ${email}`, this.SERVICE);
     let user: User;
     try {
-      user = await this.userModel.findOne({ email: email });
+      user = await this.userModel.findOne({ email: email }).exec();
       this.logger.log(`Found user: ${user}`, this.SERVICE);
     } catch (error) {
       this.logger.error(`User not found, error message: ${error.message}`, this.SERVICE);

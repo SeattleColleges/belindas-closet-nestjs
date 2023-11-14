@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   UseGuards,
+  Delete,
   Inject,
 } from '@nestjs/common';
 import { ProductsService } from '../../services/products/products.service';
@@ -55,25 +56,14 @@ export class ProductsController {
     );
     return await this.productService.updateProduct(id, productDto as Product);
   }
-}
- 
-  // we will more than likely change this delete function to an update sort of like a soft-delete. ex. isDeleted = true
 
-  //  @Roles('admin')
-  //  @UseGuards(JwtAuthGuard, RoleGuard)
-  //   @Delete('remove/:id')
-  //   async deleteProduct(@Res() response, @Param('id') id: string) {
-  //     try {
-  //       const deletedProduct = await this.productService.delete(id);
-  //       return response.status(HttpStatus.OK).json({
-  //         message: 'Product successfully deleted',
-  //         product: deletedProduct,
-  //       });
-  //     } catch (error) {
-  //       return response.status(HttpStatus.NOT_FOUND).json({
-  //         message: "Failed to delete product, please try again",
-  //         error: error.message,
-  //       });
-  //     }
-  //   }
-  // }
+  // Soft Delete Button
+
+   @Roles('admin')
+   @UseGuards(JwtAuthGuard, RoleGuard)
+    @Delete('remove/:id')
+    async deleteProduct(@Param('id') id: string) {
+        return await this.productService.delete(id);
+    }
+  }
+
