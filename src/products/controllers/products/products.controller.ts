@@ -63,6 +63,7 @@ export class ProductsController {
    @UseGuards(JwtAuthGuard, RoleGuard)
     @Delete('remove/:id')
     async deleteProduct(@Param('id') id: string) {
+      this.logger.log(`Soft deleting Product with id: ${id}`, this.CONTROLLER);
         return await this.productService.delete(id);
     }
   }
