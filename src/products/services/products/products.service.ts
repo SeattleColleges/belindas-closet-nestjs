@@ -1,15 +1,16 @@
-import { Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Product } from 'src/products/schemas/product.schema';
+import { Product } from '../../schemas/product.schema';
 
+@Injectable()
 export class ProductsService {
 
   private readonly logger = new Logger;
   SERVICE: string = ProductsService.name;
   
   constructor(
-    @InjectModel('Product') private productModel: Model<Product>,
+    @InjectModel(Product.name) private productModel: Model<Product>,
   ) { }
 
   async createProduct(product: Product): Promise<Product> {
@@ -45,6 +46,9 @@ export class ProductsService {
       this.SERVICE
     );
     if (!product || product === null) {
+      // what is logged and the exception thrown is not correct
+      // this is checking if a product with updated properities is sent from the controller
+      // no new product was supplied, this is a Bad Request
       this.logger.warn('Product not found')
       throw new NotFoundException(`Product ${id} not found`);
     }
@@ -55,8 +59,10 @@ export class ProductsService {
   }
 
   async delete(id: string): Promise<Product> {
-    const deletedProduct = await this.productModel.findByIdAndUpdate(id, { isHidden: true });
+    this.logger.log(`Soft deleting Product with id: ${id}`, this.SERVICE);
+    const deletedProduct = await this.productModel.findByIdAndUpdate(id, { isHidden: true }).exec();
     if (!deletedProduct || deletedProduct === null) {
+      this.logger.warn('Product not found')
       throw new NotFoundException(`Product ${id} not found`);
     }
     return deletedProduct;
