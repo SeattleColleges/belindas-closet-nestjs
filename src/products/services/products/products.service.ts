@@ -67,5 +67,15 @@ export class ProductsService {
     }
     return deletedProduct;
   }
+
+  async archive(id: string): Promise<Product> {
+    this.logger.log(`Archiving Product with id: ${id}`, this.SERVICE);
+    const archivedProduct = await this.productModel.findByIdAndUpdate(id, { isSold: true }).exec();
+    if (!archivedProduct || archivedProduct === null) {
+      this.logger.warn('Product not found')
+      throw new NotFoundException(`Product ${id} not found`);
+    }
+    return archivedProduct;
+  }
 }
 

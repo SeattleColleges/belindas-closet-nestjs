@@ -1,10 +1,9 @@
-import { IsString, IsEmpty, IsOptional, IsArray } from 'class-validator';
+import { IsString, IsEmpty, IsOptional, IsArray, IsBoolean } from 'class-validator';
 
 export class UpdateProductDto {
     @IsOptional()
     @IsEmpty({message: 'ID field is not required'})
     readonly createByUserID: string;
-    isHidden: boolean;
 
     @IsOptional()
     @IsArray()
@@ -37,4 +36,12 @@ export class UpdateProductDto {
     @IsOptional()
     @IsString()
     readonly productImage: string;
+
+    @IsOptional()
+    @IsBoolean()
+    readonly isHidden: boolean;
+
+    @IsOptional()
+    @IsBoolean()
+    readonly isSold: boolean;
 }
