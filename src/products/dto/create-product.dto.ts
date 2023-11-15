@@ -1,9 +1,8 @@
-import { ArrayNotContains, ArrayNotEmpty, IsArray, IsEmpty, IsOptional, IsString } from "class-validator";
+import { ArrayNotContains, ArrayNotEmpty, IsArray, IsEmpty, IsOptional, IsString, IsBoolean } from "class-validator";
 
 export class CreateProductDto {
     @IsEmpty({message: 'ID field is not required'})
     readonly createByUserID: string;
-    isHidden: boolean;
 
     @ArrayNotEmpty({message: 'Product Type field is required'})
     @ArrayNotContains([''], {message: 'Product Type field is required'})
@@ -37,4 +36,12 @@ export class CreateProductDto {
     @IsOptional()
     @IsString()
     readonly productImage: string;
+
+    @IsOptional()
+    @IsBoolean()
+    readonly isHidden: boolean;
+
+    @IsOptional()
+    @IsBoolean()
+    readonly isSold: boolean;
 }
