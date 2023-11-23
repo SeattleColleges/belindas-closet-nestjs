@@ -1,6 +1,6 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Product } from '../../schemas/product.schema';
 
 @Injectable()
@@ -69,11 +69,16 @@ export class ProductsService {
   }
 
   async archive(id: string): Promise<Product> {
+    if (!Types.ObjectId.isValid(id)) {
+        this.logger.warn('Invalid Id format');
+        throw new BadRequestException('Invalid Id format');
+    }
+    const objectId = new Types.ObjectId(id);
     this.logger.log(`Archiving Product with id: ${id}`, this.SERVICE);
-    const archivedProduct = await this.productModel.findByIdAndUpdate(id, { isSold: true }).exec();
+    const archivedProduct = await this.productModel.findByIdAndUpdate(objectId, { isSold: true }).exec();
     if (!archivedProduct || archivedProduct === null) {
-      this.logger.warn('Product not found')
-      throw new NotFoundException(`Product ${id} not found`);
+        this.logger.warn('Product not found');
+        throw new NotFoundException(`Product ${id} not found`);
     }
     return archivedProduct;
   }
