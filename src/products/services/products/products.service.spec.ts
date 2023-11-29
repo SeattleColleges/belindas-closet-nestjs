@@ -155,8 +155,8 @@ describe('ProductsService', () => {
         .mockReturnValue({
           exec: jest.fn().mockResolvedValueOnce(deletedProduct)
         } as any);
-      mockProduct = await service.delete(mockProduct.id);
-      expect(mockProduct).toEqual(deletedProduct);
+      const result = await service.delete(mockProduct.id);
+      expect(result).toEqual(deletedProduct);
     });
   });
 
@@ -171,8 +171,8 @@ describe('ProductsService', () => {
         .mockReturnValue({
           exec: jest.fn().mockResolvedValueOnce(archivedProduct)
         } as any);
-      mockProduct = await service.archive(mockProduct.id);
-      expect(mockProduct).toEqual(archivedProduct);
+      const result = await service.archive(mockProduct.id);
+      expect(result).toEqual(archivedProduct);
     });
   });
 });
