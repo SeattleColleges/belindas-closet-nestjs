@@ -20,12 +20,12 @@ describe('ProductsService', () => {
     id: '123',
     createByUserID: '',
     productType: [],
-    gender: [],
-    productShoeSize: [],
-    productSize: [],
+    productGender: [],
+    productSizeShoe: [],
+    productSizes: [],
     productSizePantsWaist: [],
     productSizePantsInseam: [],
-    productDescriptionOptional: 'string',
+    productDescription: 'string',
     productImage: 'string',
     isHidden: false
   } as Product
