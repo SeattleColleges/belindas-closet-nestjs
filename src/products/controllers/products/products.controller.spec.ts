@@ -15,7 +15,8 @@ describe('ProductsController', () => {
     findAll: jest.fn(),
     findOne: jest.fn(),
     updateProduct: jest.fn(),
-    delete: jest.fn()
+    delete: jest.fn(),
+    archive: jest.fn()
   }
 
   let mockCreateProductDto = {
@@ -133,6 +134,17 @@ describe('ProductsController', () => {
         .mockResolvedValue(mockProduct);
       const result = await controller.deleteProduct(mockProduct.id);
       expect(service.delete).toHaveBeenCalledWith(mockProduct.id);
+      expect(result).toEqual(mockProduct);
+    });
+  });
+
+  describe('archiveProduct', () => {
+    it('should call archive on the service and return a result', async () => {
+      jest
+        .spyOn(service, 'archive')
+        .mockResolvedValue(mockProduct);
+      const result = await controller.archiveProduct(mockProduct.id);
+      expect(service.archive).toHaveBeenCalledWith(mockProduct.id);
       expect(result).toEqual(mockProduct);
     });
   });

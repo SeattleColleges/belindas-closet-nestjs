@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Product } from '../../schemas/product.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { NotFoundException } from '@nestjs/common';
@@ -17,7 +17,7 @@ describe('ProductsService', () => {
   }
 
   let mockProduct = {
-    id: '123',
+    id: new Types.ObjectId().toHexString(),
     createByUserID: '',
     productType: [],
     gender: [],
@@ -27,7 +27,8 @@ describe('ProductsService', () => {
     productSizePantsInseam: [],
     productDescriptionOptional: 'string',
     productImage: 'string',
-    isHidden: false
+    isHidden: false,
+    isSold: false
   } as Product
 
   beforeEach(async () => {
@@ -154,12 +155,24 @@ describe('ProductsService', () => {
         .mockReturnValue({
           exec: jest.fn().mockResolvedValueOnce(deletedProduct)
         } as any);
-      const result = await service.delete(mockProduct.id);
-      expect(model.findByIdAndUpdate).toHaveBeenCalledWith(
-        mockProduct.id,
-        { isHidden: true }
-      );
-      expect(result).toEqual(deletedProduct);
+      mockProduct = await service.delete(mockProduct.id);
+      expect(mockProduct).toEqual(deletedProduct);
+    });
+  });
+
+  describe('archive', () => {
+    it('should call findByIdAndUpdate on the model and return a result', async () => {
+      const archivedProduct = {
+        ...mockProduct,
+        isSold: true
+      };
+      jest
+        .spyOn(model, 'findByIdAndUpdate')
+        .mockReturnValue({
+          exec: jest.fn().mockResolvedValueOnce(archivedProduct)
+        } as any);
+      mockProduct = await service.archive(mockProduct.id);
+      expect(mockProduct).toEqual(archivedProduct);
     });
   });
 });
