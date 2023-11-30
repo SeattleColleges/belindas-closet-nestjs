@@ -46,12 +46,12 @@ describe('ProductsController', () => {
     id: 'idString',
     createByUserID: '',
     productType: [],
-    gender: [],
-    productShoeSize: [],
-    productSize: [],
+    productGender: [],
+    productSizeShoe: [],
+    productSizes: [],
     productSizePantsWaist: [],
     productSizePantsInseam: [],
-    productDescriptionOptional: 'string',
+    productDescription: 'string',
     productImage: 'string',
   } as Product
 

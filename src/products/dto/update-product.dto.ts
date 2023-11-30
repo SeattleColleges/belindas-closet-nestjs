@@ -11,15 +11,15 @@ export class UpdateProductDto {
 
     @IsOptional()
     @IsArray()
-    readonly gender: [];
+    readonly productGender: [];
 
     @IsOptional()
     @IsArray()
-    readonly productShoeSize: [];
+    readonly productSizeShoe: [];
 
     @IsOptional()
     @IsArray()
-    readonly productSize: [];
+    readonly productSizes: [];
 
     @IsOptional()
     @IsArray()
@@ -31,7 +31,7 @@ export class UpdateProductDto {
 
     @IsOptional()
     @IsString()
-    readonly productDescriptionOptional: string;
+    readonly productDescription: string;
 
     @IsOptional()
     @IsString()

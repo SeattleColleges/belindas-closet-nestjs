@@ -18,13 +18,13 @@ export class Product extends Document {
     productType: [];
 
     @Prop()
-    gender: [];
+    productGender: [];
 
     @Prop()
-    productShoeSize: [];
+    productSizeShoe: [];
 
     @Prop()
-    productSize: [];
+    productSizes: [];
 
     @Prop()
     productSizePantsWaist: [];
@@ -33,7 +33,7 @@ export class Product extends Document {
     productSizePantsInseam: [];
 
     @Prop()
-    productDescriptionOptional: string;
+    productDescription: string;
 
     @Prop()
     productImage: string;
