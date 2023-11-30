@@ -3,7 +3,7 @@ import { ProductsService } from './products.service';
 import { Model, Types } from 'mongoose';
 import { Product } from '../../schemas/product.schema';
 import { getModelToken } from '@nestjs/mongoose';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('ProductsService', () => {
   let service: ProductsService;
@@ -177,6 +177,24 @@ describe('ProductsService', () => {
         } as any);
       const result = await service.archive(mockProduct.id);
       expect(result).toEqual(archivedProduct);
+    });
+
+    it('invalid id should throw BadRequestException error', async () => {
+      jest
+        .spyOn(model, 'findByIdAndUpdate')
+        .mockReturnValue({
+          exec: jest.fn().mockResolvedValueOnce("123"),
+        } as any);
+      await expect(service.archive("123")).rejects.toThrow(BadRequestException);
+    });
+
+    it('product not found should throw NotFoundException error', async () => {
+      jest
+        .spyOn(model, 'findByIdAndUpdate')
+        .mockReturnValue({
+          exec: jest.fn().mockResolvedValueOnce(null),
+        } as any);
+      await expect(service.archive(mockProduct.id)).rejects.toThrow(NotFoundException);
     });
   });
 });
