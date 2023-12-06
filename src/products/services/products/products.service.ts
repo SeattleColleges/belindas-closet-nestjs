@@ -59,13 +59,12 @@ export class ProductsService {
   }
 
   async delete(id: string): Promise<Product> {
+    this.logger.log(`Soft deleting Product with id: ${id}`, this.SERVICE);
     if (!Types.ObjectId.isValid(id)) {
       this.logger.warn('Invalid Id format');
       throw new BadRequestException('Invalid Id format');
     }
-    const objectId = new Types.ObjectId(id);
-    this.logger.log(`Soft deleting Product with id: ${id}`, this.SERVICE);
-    const deletedProduct = await this.productModel.findByIdAndUpdate(objectId, { isHidden: true }).exec();
+    const deletedProduct = await this.productModel.findByIdAndUpdate(id, { isHidden: true }).exec();
     if (!deletedProduct || deletedProduct === null) {
       this.logger.warn('Product not found')
       throw new NotFoundException(`Product ${id} not found`);

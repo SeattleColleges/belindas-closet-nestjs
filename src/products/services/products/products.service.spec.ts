@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Product } from '../../schemas/product.schema';
 import { getModelToken } from '@nestjs/mongoose';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('ProductsService', () => {
   let service: ProductsService;
@@ -17,7 +17,7 @@ describe('ProductsService', () => {
   }
 
   let mockProduct = {
-    id: '123',
+    id: new Types.ObjectId().toHexString(),
     createByUserID: '',
     productType: [],
     productGender: [],
@@ -144,22 +144,39 @@ describe('ProductsService', () => {
   });
   
   describe('delete', () => {
-    it('should call findByIdAndUpdate on the model and return a result', async () => {
-      const deletedProduct = {
-        ...mockProduct,
-        isHidden: true
-      };
+    const deletedProduct = {
+    ...mockProduct,
+    isHidden: true
+    };
+    beforeEach(() => {
       jest
-        .spyOn(model, 'findByIdAndUpdate')
-        .mockReturnValue({
-          exec: jest.fn().mockResolvedValueOnce(deletedProduct)
-        } as any);
+      .spyOn(model, 'findByIdAndUpdate')
+      .mockReturnValue({
+        exec: jest.fn().mockResolvedValueOnce(deletedProduct)
+      } as any);
+    });
+    it('should call findByIdAndUpdate on the model and return a result', async () => {
       const result = await service.delete(mockProduct.id);
       expect(model.findByIdAndUpdate).toHaveBeenCalledWith(
         mockProduct.id,
         { isHidden: true }
       );
       expect(result).toEqual(deletedProduct);
+    });
+    it('should throw BadRequestException error when an invalid id is provided', async () => {
+      await expect(service.delete('invalidId')).rejects.toThrow(BadRequestException);
+    });
+    it('should throw NotFoundException error when product not found', async () => {
+      jest
+        .spyOn(model, 'findByIdAndUpdate')
+        .mockReturnValue({
+          exec: jest.fn().mockResolvedValueOnce(null),
+        } as any);
+      await expect(service.delete(mockProduct.id)).rejects.toThrow(NotFoundException);
+      expect(model.findByIdAndUpdate).toHaveBeenCalledWith(
+        mockProduct.id,
+        { isHidden: true }
+      );
     });
   });
 });
