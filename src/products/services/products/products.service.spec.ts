@@ -165,36 +165,39 @@ describe('ProductsService', () => {
   // });
 
   describe('archive', () => {
-    it('should call findByIdAndUpdate on the model and return a result', async () => {
-      const archivedProduct = {
-        ...mockProduct,
-        isSold: true
-      };
+    const archivedProduct = {
+    ...mockProduct,
+    isSold: true
+    };
+    beforeEach(() => {
       jest
-        .spyOn(model, 'findByIdAndUpdate')
-        .mockReturnValue({
-          exec: jest.fn().mockResolvedValueOnce(archivedProduct)
-        } as any);
+      .spyOn(model, 'findByIdAndUpdate')
+      .mockReturnValue({
+        exec: jest.fn().mockResolvedValueOnce(archivedProduct)
+      } as any);
+    });
+    it('should call findByIdAndUpdate on the model and return a result', async () => {
       const result = await service.archive(mockProduct.id);
+      expect(model.findByIdAndUpdate).toHaveBeenCalledWith(
+        mockProduct.id,
+        { isSold: true }
+      );
       expect(result).toEqual(archivedProduct);
     });
-
-    it('invalid id should throw BadRequestException error', async () => {
-      jest
-        .spyOn(model, 'findByIdAndUpdate')
-        .mockReturnValue({
-          exec: jest.fn().mockResolvedValueOnce("123"),
-        } as any);
-      await expect(service.archive("123")).rejects.toThrow(BadRequestException);
+    it('should throw BadRequestException error when an invalid id is provided', async () => {
+      await expect(service.archive('invalidId')).rejects.toThrow(BadRequestException);
     });
-
-    it('product not found should throw NotFoundException error', async () => {
+    it('should throw NotFoundException error when product not found', async () => {
       jest
         .spyOn(model, 'findByIdAndUpdate')
         .mockReturnValue({
           exec: jest.fn().mockResolvedValueOnce(null),
         } as any);
       await expect(service.archive(mockProduct.id)).rejects.toThrow(NotFoundException);
+      expect(model.findByIdAndUpdate).toHaveBeenCalledWith(
+        mockProduct.id,
+        { isSold: true }
+      );
     });
   });
 });
