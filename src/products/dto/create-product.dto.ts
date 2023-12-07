@@ -12,7 +12,7 @@ export class CreateProductDto {
     readonly productGender: [];
   
     @IsOptional()
-    @IsEnum([6, 7, 8, 9, 10, 11, 12])
+    @IsEnum([null, 5, 6, 7, 8, 9, 10, 11, 12])
     readonly productSizeShoe: [];
   
     @IsOptional()
