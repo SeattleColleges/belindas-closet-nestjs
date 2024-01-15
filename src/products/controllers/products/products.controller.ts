@@ -26,7 +26,7 @@ export class ProductsController {
 
   constructor(@Inject('PRODUCTS_SERVICE') private readonly productService: ProductsService) { }
   
-  @Roles('admin')
+  @Roles('admin', 'creator')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('new')
   async createProduct(@Body() productDto: CreateProductDto) {
