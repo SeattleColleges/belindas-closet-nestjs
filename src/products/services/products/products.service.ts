@@ -54,6 +54,17 @@ export class ProductsService {
     return product;
   }
 
+  // Find by type
+  async findByType(productType: string): Promise<Product[]> {
+    this.logger.log(`Finding Products with type: ${productType}`, this.SERVICE);
+    const products = await this.productModel.find({ productType }).exec();
+    if (!products || products.length === 0) {
+      this.logger.warn('Products not found', this.SERVICE);
+      throw new NotFoundException(`No products of type ${productType} found`);
+    }
+    return products;
+  }
+
   async updateProduct(id: string, product: Product): Promise<Product> {
     this.logger.log(`Updating Product with id: ${id}`, this.SERVICE);
     if (!Types.ObjectId.isValid(id)) {
