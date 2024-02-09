@@ -46,6 +46,13 @@ export class ProductsController {
     return await this.productService.findOne(id);
   }
 
+  // Find by type
+  @Get('findByType/:productType')
+  async findByType(@Param('productType') productType: string) {
+    this.logger.log(`Finding Products with type: ${productType}`, this.CONTROLLER);
+    return await this.productService.findByType(productType);
+  }
+
   @Roles('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('update/:id')
