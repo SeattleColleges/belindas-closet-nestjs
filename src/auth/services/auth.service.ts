@@ -7,6 +7,7 @@ import { LoginDto } from '../dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
+import { MailService } from '@sendgrid/mail';
 
 @Injectable()
 export class AuthService {
@@ -79,7 +80,6 @@ export class AuthService {
 
   // forgot password function
   async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
-
     const { email } = forgotPasswordDto;
 
     // check if user exists
@@ -89,20 +89,39 @@ export class AuthService {
       throw new HttpException('User does not exist', 404);
     }
 
-    // generate new Token
-    const newToken = this.jwtService.sign({
-      message: 'Reset password',
-      id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.role,
-    });
+    // generate new password
+    const newPassword = Math.random().toString(36).slice(-8);
 
-    // we can send the token to the user's email
-    // for now, we will just log it to the console
-    
-    console.log(`New token: ${newToken}`);
-    return { newToken }
+    // update user password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await this.userModel.updateOne(
+      {
+        email,
+      },
+      {
+        password: hashedPassword,
+      },
+    );
+    // send new password to user
+    const mailService = new MailService();
+    mailService.setApiKey(process.env.SENDGRID_API_KEY);
+
+    const msg = {
+      to: email, // For testing purposes, replace with your email to see the email
+      from: process.env.SENDER_EMAIL,
+      subject: 'Reset Password',
+      html: `<p>Your new password is <strong>${newPassword}</strong>. <br> Please change your password after logging in</p>`,
+    };
+
+    mailService
+      .send(msg)
+      .then(() => {
+        console.log('Email sent');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    return { message: 'Password reset successfully' };
   }
 }
