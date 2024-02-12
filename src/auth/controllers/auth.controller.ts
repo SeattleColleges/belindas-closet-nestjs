@@ -29,7 +29,7 @@ export class AuthController {
 
     // forgot password route
     @Post('/forgot-password')
-    forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto): Promise<{ newToken: string }> {
+    forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto): Promise<{ message: string }> {
         return this.authService.forgotPassword(forgotPasswordDto);
     }
 }
