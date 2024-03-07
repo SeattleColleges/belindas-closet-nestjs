@@ -80,8 +80,9 @@ export class AuthService {
   ) {
     const { newPassword, confirmPassword } = changePasswordDto;
 
-    // get user email
+    // get user email and password
     const userEmail = user.email;
+    const userPassword = user.password;
 
     // check if new password and confirm password match
     if (newPassword !== confirmPassword) {
@@ -90,6 +91,12 @@ export class AuthService {
 
     // hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // compare new password with previous password
+    const isValidPassword = await bcrypt.compare(newPassword, userPassword);
+    if (isValidPassword) {
+      throw new HttpException('New password cannot be the same as previous password', 400);
+    }
 
     // update user password
     await this.userModel.updateOne(
