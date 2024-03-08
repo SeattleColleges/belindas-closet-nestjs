@@ -1,9 +1,12 @@
-import { GenerateProductKeyDto } from './../dto/product-key.dto';
+import { ChangePasswordDto } from '../dto/change-password.dto';
 import { LoginDto } from '../dto/login.dto';
 import { SignUpDto } from '../dto/signup.dto';
 import { AuthService } from '../services/auth.service';
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
+import { JwtAuthGuard } from '../jwt.guard';
+import { GetUser } from '../decorator/user.decorator';
+import { User } from 'src/user/schemas/user.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -19,12 +22,11 @@ export class AuthController {
         return this.authService.login(loginDto);
     }
     
-    // this is the route for generating a product key for a user to use to register for admin access
-    @Post('/key')
-    createKey(@Body() productKeyDto: GenerateProductKeyDto): Promise<{ key: string }> {
-        const userEmail = productKeyDto.email;
-        const userRole = productKeyDto.role;
-        return this.authService.generateProductKey(userEmail, userRole);
+    // change password route
+    @Post('/change-password')
+    @UseGuards(JwtAuthGuard)
+    changePassword(@Body() changePasswordDto: ChangePasswordDto, @GetUser() user: User): Promise<{ message: string }> {
+        return this.authService.changePassword(changePasswordDto, user);
     }
 
     // forgot password route

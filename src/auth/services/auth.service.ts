@@ -8,6 +8,8 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { MailService } from '@sendgrid/mail';
+import { ChangePasswordDto } from '../dto/change-password.dto';
+import { GetUser } from '../decorator/user.decorator';
 
 @Injectable()
 export class AuthService {
@@ -71,11 +73,42 @@ export class AuthService {
 
     return { token };
   }
-  // generate product key for user to access the product
-  generateProductKey(email: string, role: string) {
-    const key = `${email}-${role}-${process.env.PRODUCT_KEY}`;
-    const hashedKey = bcrypt.hashSync(key, 10);
-    return hashedKey;
+  // change password function
+  async changePassword(
+    changePasswordDto: ChangePasswordDto,
+    @GetUser() user: User,
+  ) {
+    const { newPassword, confirmPassword } = changePasswordDto;
+
+    // get user email and password
+    const userEmail = user.email;
+    const userPassword = user.password;
+
+    // check if new password and confirm password match
+    if (newPassword !== confirmPassword) {
+      throw new HttpException('Passwords do not match', 400);
+    }
+
+    // hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // compare new password with previous password
+    const isValidPassword = await bcrypt.compare(newPassword, userPassword);
+    if (isValidPassword) {
+      throw new HttpException('New password cannot be the same as previous password', 400);
+    }
+
+    // update user password
+    await this.userModel.updateOne(
+      {
+        email: userEmail,
+      },
+      {
+        password: hashedPassword,
+      },
+    );
+
+    return { message: 'Password changed successfully' };
   }
 
   // forgot password function
