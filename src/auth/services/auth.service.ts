@@ -1,56 +1,71 @@
-// Load the AWS SDK for Node.js
-var AWS = require("aws-sdk");
-// Set the region
-AWS.config.update({ region: "REGION" });
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from 'src/user/schemas/user.schema';
+import { ForgotPasswordDto } from '../dto/forgot-password.dto';
+import * as bcrypt from 'bcrypt';
+import { SES } from 'aws-sdk';
 
-// Create sendEmail params
-var params = {
-  Destination: {
-    /* required */
-    CcAddresses: [
-      "EMAIL_ADDRESS",
-      /* more items */
-    ],
-    ToAddresses: [
-      "EMAIL_ADDRESS",
-      /* more items */
-    ],
-  },
-  Message: {
-    /* required */
-    Body: {
-      /* required */
-      Html: {
-        Charset: "UTF-8",
-        Data: "HTML_FORMAT_BODY",
+@Injectable()
+export class AuthService {
+  constructor(
+    @InjectModel(User.name)
+    private userModel: Model<User>,
+  ) {}
+
+  // ... other methods ...
+
+  // forgot password function
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
+
+    // check if user exists
+    const user = await this.userModel.findOne({ email });
+
+    if (!user) {
+      throw new HttpException('User does not exist', 404);
+    }
+
+    // generate new password
+    const newPassword = Math.random().toString(36).slice(-8);
+
+    // update user password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await this.userModel.updateOne(
+      {
+        email,
       },
-      Text: {
-        Charset: "UTF-8",
-        Data: "TEXT_FORMAT_BODY",
+      {
+        password: hashedPassword,
       },
-    },
-    Subject: {
-      Charset: "UTF-8",
-      Data: "Test email",
-    },
-  },
-  Source: "SENDER_EMAIL_ADDRESS" /* required */,
-  ReplyToAddresses: [
-    "EMAIL_ADDRESS",
-    /* more items */
-  ],
-};
+    );
 
-// Create the promise and SES service object
-var sendPromise = new AWS.SES({ apiVersion: "2010-12-01" })
-  .sendEmail(params)
-  .promise();
+    // send new password to user using SES
+    const ses = new SES({ region: 'your-aws-region' }); // Replace 'your-aws-region' with your AWS region
+    const params = {
+      Destination: {
+        ToAddresses: [email],
+      },
+      Message: {
+        Body: {
+          Text: {
+            Data: `Your new password is ${newPassword}. Please change your password after logging in.`,
+          },
+        },
+        Subject: { Data: 'Reset Password' },
+      },
+      Source: 'your-sender-email', // Replace with your sender email address
+    };
 
-// Handle promise's fulfilled/rejected states
-sendPromise
-  .then(function (data) {
-    console.log(data.MessageId);
-  })
-  .catch(function (err) {
-    console.error(err, err.stack);
-  });
+    ses.sendEmail(params, function (err, data) {
+      if (err) {
+        console.error(err, err.stack);
+        throw new HttpException('Failed to send email', 500);
+      } else {
+        console.log('Email sent', data);
+      }
+    });
+
+    return { message: 'Password reset successfully' };
+  }
+}
