@@ -1,7 +1,10 @@
-import { Body, Controller, Get, Inject, Logger, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Logger, Param, Patch, UseGuards } from '@nestjs/common';
 import { UserService } from '../../services/user/user.service';
 import { UpdateUserDto } from '../../dto/update-user.dto';
 import { User } from '../../schemas/user.schema';
+import { JwtAuthGuard } from '../../../auth/jwt.guard';
+import { Roles } from '../../../auth/roles.decorator';
+import { RoleGuard } from '../../../auth/role.guard';
 
 @Controller('user')
 export class UserController {
@@ -28,7 +31,9 @@ export class UserController {
     this.logger.log(`Getting User with email: ${email}`, this.CONTROLLER);
     return await this.userService.getUserByEmail(email);
   }
-    
+  
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Patch('update/:id')
   async updateUser(@Param('id') id: string, @Body() userDto: UpdateUserDto) {
     this.logger.log(
