@@ -80,18 +80,12 @@ export class ProductsService {
       `Updated Product; ${JSON.stringify(product, null, '\t')}`,
       this.SERVICE,
     );
-    const updatedProduct = await this.productModel
-      .findByIdAndUpdate(id, product, {
-        updatedByUser: user,
-        new: true,
-        runValidators: true,
-      })
-      .exec();
+    const updatedProduct = Object.assign(product, { updatedByUser: user });
     if (!updatedProduct || updatedProduct === null) {
       this.logger.warn('Product not found', this.SERVICE);
       throw new NotFoundException(`Product ${id} not found`);
     }
-    return updatedProduct;
+    return await this.productModel.findByIdAndUpdate(id, updatedProduct);
   }
 
   async delete(id: string): Promise<Product> {
