@@ -7,6 +7,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Product } from '../../schemas/product.schema';
+import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class ProductsService {
@@ -17,12 +18,12 @@ export class ProductsService {
     @InjectModel(Product.name) private productModel: Model<Product>,
   ) {}
 
-  async createProduct(product: Product): Promise<Product> {
+  async createProduct(product: Product, user: User): Promise<Product> {
     this.logger.log(
       `Creating Product: ${JSON.stringify(product, null, '\t')}`,
       this.SERVICE,
     );
-    const newProduct = Object.assign(product);
+    const newProduct = Object.assign(product, { createdByUser: user });
     return await this.productModel.create(newProduct);
   }
 
@@ -65,7 +66,7 @@ export class ProductsService {
     return products;
   }
 
-  async updateProduct(id: string, product: Product): Promise<Product> {
+  async updateProduct(id: string, product: Product, user: User): Promise<Product> {
     this.logger.log(`Updating Product with id: ${id}`, this.SERVICE);
     if (!Types.ObjectId.isValid(id)) {
       this.logger.warn('Invalid Id format', this.SERVICE);
@@ -81,6 +82,7 @@ export class ProductsService {
     );
     const updatedProduct = await this.productModel
       .findByIdAndUpdate(id, product, {
+        updatedByUser: user,
         new: true,
         runValidators: true,
       })

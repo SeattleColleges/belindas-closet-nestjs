@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
+import { User } from "src/user/schemas/user.schema";
 
 @Schema({
     timestamps: true,
@@ -12,7 +13,13 @@ export class Product extends Document {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     })
-    createByUserID: string;
+    createdByUser: User;
+
+    @Prop({
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    })
+    updatedByUser: User;
 
     @Prop()
     productType: [];

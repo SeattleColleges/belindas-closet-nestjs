@@ -17,6 +17,8 @@ import { JwtAuthGuard } from '../../../auth/jwt.guard';
 import { Roles } from '../../../auth/roles.decorator';
 import { RoleGuard } from '../../../auth/role.guard';
 import { Product } from '../../schemas/product.schema';
+import { User } from 'src/user/schemas/user.schema';
+import { GetUser } from 'src/auth/decorator/user.decorator';
 
 @Controller('products')
 export class ProductsController {
@@ -29,9 +31,9 @@ export class ProductsController {
   @Roles('admin', 'creator')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('new')
-  async createProduct(@Body() productDto: CreateProductDto) {
+  async createProduct(@Body() productDto: CreateProductDto, @GetUser() user: User) {
     this.logger.log(`Creating Product ${JSON.stringify(productDto, null, '\t')}`, this.CONTROLLER);
-    return await this.productService.createProduct(productDto as Product);
+    return await this.productService.createProduct(productDto as Product, user.id as User);
   }
   
   @Get('')
@@ -53,15 +55,15 @@ export class ProductsController {
     return await this.productService.findByType(productType);
   }
 
-  @Roles('admin')
+  @Roles('admin', 'creator')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Put('update/:id')
-  async updateProductById(@Param('id') id: string, @Body() productDto: UpdateProductDto) {
+  async updateProductById(@Param('id') id: string, @Body() productDto: UpdateProductDto, @GetUser() user: User) {
     this.logger.log(
       `Updating Product with id: ${id} with: ${JSON.stringify(productDto, null, '\t')}`, 
       this.CONTROLLER
     );
-    return await this.productService.updateProduct(id, productDto as Product);
+    return await this.productService.updateProduct(id, productDto as Product, user.id as User);
   }
 
   // Soft Delete Button
