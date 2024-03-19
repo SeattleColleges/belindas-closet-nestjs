@@ -66,7 +66,11 @@ export class ProductsService {
     return products;
   }
 
-  async updateProduct(id: string, product: Product, user: User): Promise<Product> {
+  async updateProduct(
+    id: string,
+    product: Product,
+    user: User,
+  ): Promise<Product> {
     this.logger.log(`Updating Product with id: ${id}`, this.SERVICE);
     if (!Types.ObjectId.isValid(id)) {
       this.logger.warn('Invalid Id format', this.SERVICE);
@@ -80,12 +84,18 @@ export class ProductsService {
       `Updated Product; ${JSON.stringify(product, null, '\t')}`,
       this.SERVICE,
     );
-    const updatedProduct = Object.assign(product, { updatedByUser: user });
+    const updatedProduct = await this.productModel
+      .findByIdAndUpdate(
+        id,
+        { ...product, updatedByUser: user },
+        { new: true, runValidators: true },
+      )
+      .exec();
     if (!updatedProduct || updatedProduct === null) {
       this.logger.warn('Product not found', this.SERVICE);
       throw new NotFoundException(`Product ${id} not found`);
     }
-    return await this.productModel.findByIdAndUpdate(id, updatedProduct);
+    return updatedProduct;
   }
 
   async delete(id: string): Promise<Product> {

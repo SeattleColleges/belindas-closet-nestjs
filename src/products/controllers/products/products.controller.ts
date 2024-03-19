@@ -17,8 +17,8 @@ import { JwtAuthGuard } from '../../../auth/jwt.guard';
 import { Roles } from '../../../auth/roles.decorator';
 import { RoleGuard } from '../../../auth/role.guard';
 import { Product } from '../../schemas/product.schema';
-import { User } from 'src/user/schemas/user.schema';
-import { GetUser } from 'src/auth/decorator/user.decorator';
+import { User } from '../../../user/schemas/user.schema';
+import { GetUser } from '../../../auth/decorator/user.decorator';
 
 @Controller('products')
 export class ProductsController {

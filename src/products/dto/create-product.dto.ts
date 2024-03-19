@@ -1,5 +1,5 @@
 import { IsEmpty, IsOptional, IsString, IsBoolean, IsEnum } from "class-validator";
-import { User } from "src/user/schemas/user.schema";
+import { User } from "../../user/schemas/user.schema";
 
 export class CreateProductDto {
     @IsEmpty({message: 'ID field is not required'})
