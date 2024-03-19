@@ -4,19 +4,20 @@ import { Model, Types } from 'mongoose';
 import { Product } from '../../schemas/product.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { User } from 'src/user/schemas/user.schema';
 
 describe('ProductsService', () => {
   let service: ProductsService;
   let model: Model<Product>;
 
-  let mockProductModel = {
+  const mockProductModel = {
     create: jest.fn(),
     find: jest.fn(),
     findById: jest.fn(),
     findByIdAndUpdate: jest.fn(),
   };
 
-  let mockProduct = {
+  const mockProduct = {
     id: new Types.ObjectId().toHexString(),
     createByUserID: '',
     productType: [],
@@ -28,7 +29,7 @@ describe('ProductsService', () => {
     productDescription: 'string',
     productImage: 'string',
     isHidden: false,
-  } as Product;
+  } as unknown as Product;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -59,7 +60,7 @@ describe('ProductsService', () => {
       jest
         .spyOn(model, 'create')
         .mockImplementationOnce(() => Promise.resolve(newProduct) as any);
-      const result = await service.createProduct(newProduct as any);
+      const result = await service.createProduct(newProduct as any, {} as any);
       expect(result).toEqual(newProduct);
     });
   });
@@ -136,10 +137,11 @@ describe('ProductsService', () => {
       const result = await service.updateProduct(
         mockProduct.id,
         updatedProduct as any,
+        {} as User,
       );
       expect(model.findByIdAndUpdate).toHaveBeenCalledWith(
         mockProduct.id,
-        updatedProduct,
+        { ...updatedProduct, updatedByUser: {} as User},
         {
           new: true,
           runValidators: true,
@@ -149,12 +151,12 @@ describe('ProductsService', () => {
     });
     it('should throw a BadRequestException error when an invalid id is provided', async () => {
       await expect(
-        service.updateProduct('invalidId', updatedProduct as Product),
+        service.updateProduct('invalidId', updatedProduct as Product, {} as User),
       ).rejects.toThrow(BadRequestException);
     });
     it('should throw a BadRequestException when an updated product is not provided', async () => {
       await expect(
-        service.updateProduct(new Types.ObjectId().toHexString(), null),
+        service.updateProduct(new Types.ObjectId().toHexString(), null, {} as User),
       ).rejects.toThrow(BadRequestException);
     });
     it('should throw NotFoundException error when product not found', async () => {

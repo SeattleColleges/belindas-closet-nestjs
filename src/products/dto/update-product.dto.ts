@@ -1,9 +1,14 @@
 import { IsString, IsEmpty, IsOptional, IsArray, IsBoolean } from 'class-validator';
+import { User } from '../../user/schemas/user.schema';
 
 export class UpdateProductDto {
     @IsOptional()
     @IsEmpty({message: 'ID field is not required'})
-    readonly createByUserID: string;
+    readonly createdByUser: User;
+
+    @IsOptional()
+    @IsEmpty({message: 'ID field is not required'})
+    readonly updatedByUser: User;
 
     @IsOptional()
     @IsArray()
