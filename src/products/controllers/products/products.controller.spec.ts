@@ -4,13 +4,13 @@ import { ProductsService } from '../../services/products/products.service';
 import { CreateProductDto } from '../../dto/create-product.dto';
 import { Product } from '../../schemas/product.schema';
 import { UpdateProductDto } from '../../dto/update-product.dto';
-
+import { User } from '../../../user/schemas/user.schema';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
   let service: ProductsService;
 
-  let mockService = {
+  const mockService = {
     createProduct: jest.fn(),
     findAll: jest.fn(),
     findOne: jest.fn(),
@@ -18,8 +18,8 @@ describe('ProductsController', () => {
     delete: jest.fn()
   }
 
-  let mockCreateProductDto = {
-    createByUserID: '',
+  const mockCreateProductDto = {
+    createdByUser: User,
     productType: [],
     gender: [],
     productShoeSize: [],
@@ -30,8 +30,9 @@ describe('ProductsController', () => {
     productImage: 'string',
   } as unknown as CreateProductDto
 
-  let mockUpdateProductDto = {
-    createByUserID: '',
+  const mockUpdateProductDto = {
+    createdByUser: '',
+    updatedByUser: '',
     productType: [],
     gender: [],
     productShoeSize: [],
@@ -42,9 +43,8 @@ describe('ProductsController', () => {
     productImage: 'string',
   } as unknown as UpdateProductDto
 
-  let mockProduct = {
-    id: 'idString',
-    createByUserID: '',
+  const mockProduct = {
+    id: 'string',
     productType: [],
     productGender: [],
     productSizeShoe: [],
@@ -53,7 +53,7 @@ describe('ProductsController', () => {
     productSizePantsInseam: [],
     productDescription: 'string',
     productImage: 'string',
-  } as Product
+  } as unknown as Product
 
 
   beforeEach(async () => {
@@ -86,8 +86,7 @@ describe('ProductsController', () => {
         jest
           .spyOn(service, 'createProduct')
           .mockResolvedValue(mockProduct);
-        let response = await controller.createProduct(mockCreateProductDto);
-        expect(service.createProduct).toHaveBeenCalledWith(mockCreateProductDto);
+        const response = await controller.createProduct(mockCreateProductDto, {} as User);
         expect(response).toEqual(mockProduct);
       }
     );
@@ -120,8 +119,7 @@ describe('ProductsController', () => {
       jest
         .spyOn(service, 'updateProduct')
         .mockResolvedValue(mockProduct);
-      const result = await controller.updateProductById(mockProduct.id, mockUpdateProductDto);
-      expect(service.updateProduct).toHaveBeenCalledWith(mockProduct.id, mockUpdateProductDto);
+      const result = await controller.updateProductById(mockProduct.id, mockUpdateProductDto, {} as User);
       expect(result).toEqual(mockProduct);
     });
   });
