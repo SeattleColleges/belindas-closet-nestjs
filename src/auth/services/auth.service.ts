@@ -78,11 +78,17 @@ export class AuthService {
     changePasswordDto: ChangePasswordDto,
     @GetUser() user: User,
   ) {
-    const { newPassword, confirmPassword } = changePasswordDto;
+    const { currentPassword, newPassword, confirmPassword } = changePasswordDto;
 
     // get user email and password
     const userEmail = user.email;
     const userPassword = user.password;
+
+    // compare current password with user password
+    const isValidPassword = await bcrypt.compare(currentPassword, userPassword);
+    if (!isValidPassword) {
+      throw new HttpException('Invalid credentials', 400);
+    }
 
     // check if new password and confirm password match
     if (newPassword !== confirmPassword) {
@@ -93,8 +99,8 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // compare new password with previous password
-    const isValidPassword = await bcrypt.compare(newPassword, userPassword);
-    if (isValidPassword) {
+    const isSamePassword = await bcrypt.compare(newPassword, userPassword);
+    if (isSamePassword) {
       throw new HttpException('New password cannot be the same as previous password', 400);
     }
 
