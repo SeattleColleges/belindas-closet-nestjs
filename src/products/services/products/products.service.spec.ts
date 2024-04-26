@@ -4,7 +4,7 @@ import { Model, Types } from 'mongoose';
 import { Product } from '../../schemas/product.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { User } from 'src/user/schemas/user.schema';
+import { User } from '../../../user/schemas/user.schema';
 
 describe('ProductsService', () => {
   let service: ProductsService;
