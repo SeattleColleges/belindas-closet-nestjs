@@ -1,4 +1,4 @@
-import { Role } from "src/user/schemas/user.schema";
+import { Role } from '../../user/schemas/user.schema';
 import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
 
 export class SignUpDto {

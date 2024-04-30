@@ -93,7 +93,7 @@ describe('UserController', () => {
         .spyOn(service, 'updateUser')
         .mockResolvedValue(mockUpdateUser as User);
       const result = await controller.updateUser(mockUser.id, mockUpdateUser);
-      console.log(result)
+      // Unfinished test
     });
   });
 });
