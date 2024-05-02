@@ -15,10 +15,10 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
-  });
+  it('should return 200 when accessing /user endpoint thru GET', async () => {
+  const res = await request(app.getHttpServer())
+    .get('/user')
+    .expect(200);
+  return res
+});
 });

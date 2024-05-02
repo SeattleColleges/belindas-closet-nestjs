@@ -5,7 +5,7 @@ export class CreateProductDto {
     @IsEmpty({message: 'ID field is not required'})
     readonly createdByUser: User;
     
-    @IsEnum(['Shoes', 'Shirts', 'Pants', 'Skirt', 'Jacket/Blazer', 'Dress', 'Casual Wear', 'Suits', 'Accessories'])
+    @IsEnum(['Shoes', 'Shirts', 'Pants', 'Skirts', 'Jacket/Blazer', 'Dress', 'Casual Wear', 'Suits', 'Accessories'])
     readonly productType: [];
   
     @IsOptional()

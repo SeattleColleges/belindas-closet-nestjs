@@ -6,7 +6,7 @@ import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { JwtAuthGuard } from '../jwt.guard';
 import { GetUser } from '../decorator/user.decorator';
-import { User } from 'src/user/schemas/user.schema';
+import { User } from '../../user/schemas/user.schema';
 
 @Controller('auth')
 export class AuthController {
