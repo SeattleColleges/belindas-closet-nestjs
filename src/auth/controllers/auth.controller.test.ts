@@ -45,6 +45,7 @@ describe('Tests AuthController signup, login, changePassword, and forgot passwor
     const response = await controller.signUp(signUpDto);
     expect(response).toEqual({ token: 'jwtTokenTest', ...signUpDto });
     expect(service.signUp).toHaveBeenCalledWith(signUpDto);
+    expect(service.signUp).toHaveBeenCalledTimes(1);
   });
 
   it('should login and return a token', async () => {
@@ -52,7 +53,8 @@ describe('Tests AuthController signup, login, changePassword, and forgot passwor
       email: 'testuser@example.com',
       password: 'testuser@example.com',
     };
-    await controller.login(loginDto);
+    const response = await controller.login(loginDto);
+    expect(response).toEqual({ token: 'jwtTokenTest'})
     expect(mockAuthService.login).toHaveBeenCalledWith(loginDto);
     expect(mockAuthService.login).toHaveBeenCalledTimes(1);
   });
