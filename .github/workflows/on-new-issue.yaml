@@ -1,5 +1,5 @@
 name: send-issue-smartsheet
-run-name: ${{ github.actor }} is testing this workflow
+run-name: ${{ github.actor }} created an issue
 on:
   issues:
     types: [opened] # TODO: Create on: issues: [edited] to connect to Smartsheet PUT request to update issues when edited
