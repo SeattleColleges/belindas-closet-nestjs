@@ -19,7 +19,7 @@ jobs:
         uses: action-pack/increment@v2
         with:
           name: 'ISSUE_NUM'
-          token: ${{ secrets.VAR_GH_TOKEN }}
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Checkout # checks out repository
         uses: actions/checkout@v4
