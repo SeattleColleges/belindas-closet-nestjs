@@ -3,7 +3,7 @@ import smartsheet
 import logging
 import os
 
-SMART_ACCESS_TOKEN = os.environ['SMARTSHEET_ACCESS_TOKEN']
+SMART_ACCESS_TOKEN = os.environ['SMART_ACCESS_TOKEN']
 GITHUB_ACCESS_TOKEN = os.environ['GH_ACCESS_TOKEN']
 ISSUE_NUM = os.environ['ISSUE_NUM'] 
 
