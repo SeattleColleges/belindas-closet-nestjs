@@ -57,11 +57,6 @@ smartsheet_response = requests.post(
             'value': repo_url[40:]
             },
             {
-            'columnId': 2009687579905924,
-            'displayValue': 'priority',
-            'value': 'priority pull from PBI'
-            },
-            {
             'columnId': 6842840047898500,
             'displayValue': 'assignee',
             'value': assignee
