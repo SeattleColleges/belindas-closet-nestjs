@@ -37,37 +37,37 @@ index = issues['number']
 
 # POST request to Smartsheet API
 smartsheet_response = requests.post(
-    'https://api.smartsheet.com/2.0/sheets/2342839996338052/rows',
+    'https://api.smartsheet.com/2.0/sheets/6453502242934660/rows',
     headers={'Authorization': f'Bearer {SMART_ACCESS_TOKEN}', 'Content-Type': 'application/json'},
     json={
-        'sheetId': 2342839996338052,
+        'sheetId': 6453502242934660,
         'accessLevel': 'OWNER',
         'createdBy': {
             'name': 'automation'
         },
         'cells': [
             {
-            'columnId': 5558737690382212,
+            'columnId': 3135587486748548,
             'displayValue': 'title',
             'value': title
             },
             {
-            'columnId': 3306937876696964,
+            'columnId': 7639187114119044,
             'displayValue': 'repo url',
             'value': repo_url[40:]
             },
             {
-            'columnId': 7810537504067460,
+            'columnId': 2009687579905924,
             'displayValue': 'priority',
             'value': 'priority pull from PBI'
             },
             {
-            'columnId': 2181037969854340,
+            'columnId': 6513287207276420,
             'displayValue': 'assignee',
             'value': assignee
             },
             {
-            'columnId': 6684637597224836,
+            'columnId': 4261487393591172,
             'displayValue': 'index',
             'value': index
             }
