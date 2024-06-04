@@ -14,6 +14,8 @@ export class UserController {
 
   constructor(@Inject('USER_SERVICE') private readonly userService: UserService) {}
   
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('')
   async getAllUsers() {
     this.logger.log('Getting all Users', this.CONTROLLER);
