@@ -39,8 +39,6 @@ export class AuthService {
       message: 'Sign up successfully',
       id: newUser._id,
       firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      email: newUser.email,
       role: newUser.role,
     });
 
@@ -66,8 +64,6 @@ export class AuthService {
       message: 'Login successful',
       id: user._id,
       firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
       role: user.role,
     });
 
