@@ -20,6 +20,7 @@ describe('UserController', () => {
     firstName: 'user.firstName',
     lastName: 'user.lastName',
     email: 'user@email.com',
+    pronoun: 'they/them',
     role: 'ADMIN',
   } as unknown as User
 
@@ -28,6 +29,7 @@ describe('UserController', () => {
     firstName: 'updated.firstName',
     lastName: 'updated.lastName',
     email: 'user@email.com',
+    pronoun: 'they/them',
     role: 'ADMIN',
   } as unknown as UpdateUserDto
 
