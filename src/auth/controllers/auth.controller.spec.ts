@@ -39,6 +39,7 @@ describe('Tests AuthController signup, login, changePassword, and forgot passwor
       firstName: 'Testy',
       lastName: 'McTesterson',
       email: 'test@example.com',
+      pronoun: 'they/them',
       password: 'password',
       role: Role.ADMIN,
     };

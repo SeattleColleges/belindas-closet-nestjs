@@ -34,7 +34,6 @@ export class UserController {
     return await this.userService.getUserByEmail(email);
   }
   
-  @Roles('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Patch('update/:id')
   async updateUser(@Param('id') id: string, @Body() userDto: UpdateUserDto) {
