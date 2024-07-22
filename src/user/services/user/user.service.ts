@@ -20,6 +20,7 @@ export class UserService {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
+      pronoun: user.pronoun,
       role: user.role,
     }));
   }
@@ -42,6 +43,7 @@ export class UserService {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
+      pronoun: user.pronoun,
       role: user.role,
     } as User;
   }

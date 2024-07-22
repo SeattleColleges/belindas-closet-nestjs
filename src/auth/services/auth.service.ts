@@ -20,7 +20,7 @@ export class AuthService {
   ) {}
 
   async signUp(signUpDto: SignUpDto) {
-    const { firstName, lastName, email, password, role } = signUpDto;
+    const { firstName, lastName, email, pronoun, password, role } = signUpDto;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await this.userModel.findOne({ email });
@@ -31,6 +31,7 @@ export class AuthService {
       firstName,
       lastName,
       email,
+      pronoun,
       password: hashedPassword,
       role,
     });

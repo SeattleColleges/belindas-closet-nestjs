@@ -21,6 +21,7 @@ describe('UserService', () => {
     firstName: 'user.firstName',
     lastName: 'user.lastName',
     email: 'user@email.com',
+    pronoun: 'they/them',
     role: 'ADMIN',
   }
 
