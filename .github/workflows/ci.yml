@@ -7,13 +7,13 @@ name: CI (
 run-name: Node.js CI
 on:
   workflow_call: # required when creating a reusable workflow
-#    inputs:
-#      config-path:
-#        required: false
-#        type: string
-#    secrets:
-#      token:
-#        required: false
+   inputs:
+     config-path:
+       required: false
+       type: string
+   secrets:
+     token:
+       required: false
 jobs:
   build-and-test:
 
@@ -25,9 +25,9 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js 18
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: 'npm'
@@ -59,7 +59,7 @@ jobs:
 
       # https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       - name: Archive Next.js build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: nest.js-build-${{ matrix.node-version }}
           path: dist/
