@@ -9,8 +9,8 @@ export class UserService {
   private readonly logger = new Logger;
   SERVICE: string = UserService.name;
 
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
-    
+  constructor(@InjectModel(User.name) private userModel: Model<User>) { }
+
   async getAllUsers(): Promise<any> {
     this.logger.log('Getting all Users', this.SERVICE);
     //fix: Use serialization to mask password, so we don't have to transform the data
@@ -47,7 +47,18 @@ export class UserService {
       role: user.role,
     } as User;
   }
-    
+
+  async deleteUser(id: string): Promise<User> {
+    let deleteUser;
+    try {
+      deleteUser = await this.userModel.findByIdAndDelete(id).exec();
+    } catch (error) {
+      this.logger.error(`User not found, error message: ${error.message}`, this.SERVICE);
+      throw new HttpException('User not found!', 404);
+    }
+    return deleteUser;
+  }
+
   async getUserByEmail(email: string): Promise<User> {
     this.logger.log(`Getting User with email: ${email}`, this.SERVICE);
     let user: User;
