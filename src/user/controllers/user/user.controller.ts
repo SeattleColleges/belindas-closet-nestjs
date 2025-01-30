@@ -22,6 +22,8 @@ export class UserController {
     return await this.userService.getAllUsers();
   }
 
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete('delete/:id')
   async deleteUser(@Param('id') id: string) {
     this.logger.log('', this.CONTROLLER);
