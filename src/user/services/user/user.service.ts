@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../../schemas/user.schema';
@@ -48,15 +48,16 @@ export class UserService {
     } as User;
   }
 
-  async deleteUser(id: string): Promise<User> {
-    let deleteUser;
+  async deleteUser(id: string): Promise<void> { // No return value needed
     try {
-      deleteUser = await this.userModel.findByIdAndDelete(id).exec();
+      const deleteUser = await this.userModel.findByIdAndDelete(id).exec();
+      if (!deleteUser) {
+        throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
+      }
     } catch (error) {
       this.logger.error(`User not found, error message: ${error.message}`, this.SERVICE);
-      throw new HttpException('User not found!', 404);
+      throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
     }
-    return deleteUser;
   }
 
   async getUserByEmail(email: string): Promise<User> {

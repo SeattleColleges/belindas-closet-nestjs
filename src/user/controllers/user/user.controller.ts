@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, UseGuards, HttpCode } from '@nestjs/common';
 import { UserService } from '../../services/user/user.service';
 import { UpdateUserDto } from '../../dto/update-user.dto';
 import { User } from '../../schemas/user.schema';
@@ -25,6 +25,7 @@ export class UserController {
   @Roles('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete('delete/:id')
+  @HttpCode(204) // Ensures no response in body
   async deleteUser(@Param('id') id: string) {
     this.logger.log('', this.CONTROLLER);
     return await this.userService.deleteUser(id);
