@@ -14,17 +14,8 @@ export class SubmissionFormService {
   async create(
     createSubmissionFormDto: CreateSubmissionFormDto,
   ): Promise<SubmissionForm> {
-    try {
-      const createdForm = new this.submissionFormModel(createSubmissionFormDto);
-      return await createdForm.save();
-    } catch (error) {
-      console.error('Error while creating submission form:', error); // Log error
-      if (error.code === 11000) {
-        // MongoDB duplicate key error
-        throw new ConflictException('Email already exists');
-      }
-      throw error;
-    }
+    const createdForm = new this.submissionFormModel(createSubmissionFormDto);
+    return await createdForm.save();
   }
 
   async findAll(): Promise<SubmissionForm[]> {
