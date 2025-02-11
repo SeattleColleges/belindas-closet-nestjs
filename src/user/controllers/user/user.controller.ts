@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Logger, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, UseGuards, HttpCode } from '@nestjs/common';
 import { UserService } from '../../services/user/user.service';
 import { UpdateUserDto } from '../../dto/update-user.dto';
 import { User } from '../../schemas/user.schema';
@@ -8,12 +8,12 @@ import { RoleGuard } from '../../../auth/role.guard';
 
 @Controller('user')
 export class UserController {
-  
+
   private readonly logger = new Logger;
   CONTROLLER: string = UserController.name;
 
-  constructor(@Inject('USER_SERVICE') private readonly userService: UserService) {}
-  
+  constructor(@Inject('USER_SERVICE') private readonly userService: UserService) { }
+
   @Roles('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('')
@@ -22,18 +22,27 @@ export class UserController {
     return await this.userService.getAllUsers();
   }
 
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Delete('delete/:id')
+  @HttpCode(204) // Ensures no response in body
+  async deleteUser(@Param('id') id: string) {
+    this.logger.log('', this.CONTROLLER);
+    return await this.userService.deleteUser(id);
+  }
+
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     this.logger.log(`Getting User with id: ${id}`, this.CONTROLLER);
     return this.userService.getUserById(id);
   }
-  
+
   @Get('email/:email')
   async getUserByEmail(@Param('email') email: string) {
     this.logger.log(`Getting User with email: ${email}`, this.CONTROLLER);
     return await this.userService.getUserByEmail(email);
   }
-  
+
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Patch('update/:id')
   async updateUser(@Param('id') id: string, @Body() userDto: UpdateUserDto) {
