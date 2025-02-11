@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../../schemas/user.schema';
@@ -9,8 +9,8 @@ export class UserService {
   private readonly logger = new Logger;
   SERVICE: string = UserService.name;
 
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
-    
+  constructor(@InjectModel(User.name) private userModel: Model<User>) { }
+
   async getAllUsers(): Promise<any> {
     this.logger.log('Getting all Users', this.SERVICE);
     //fix: Use serialization to mask password, so we don't have to transform the data
@@ -47,7 +47,19 @@ export class UserService {
       role: user.role,
     } as User;
   }
-    
+
+  async deleteUser(id: string): Promise<void> { // No return value needed
+    try {
+      const deleteUser = await this.userModel.findByIdAndDelete(id).exec();
+      if (!deleteUser) {
+        throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      this.logger.error(`User not found, error message: ${error.message}`, this.SERVICE);
+      throw new HttpException('User not found!', HttpStatus.NOT_FOUND);
+    }
+  }
+
   async getUserByEmail(email: string): Promise<User> {
     this.logger.log(`Getting User with email: ${email}`, this.SERVICE);
     let user: User;
