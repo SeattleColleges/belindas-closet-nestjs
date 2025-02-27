@@ -49,6 +49,8 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
     const user = await this.userModel.findOne({ email });
+
+
     if (!user) {
       throw new HttpException('Invalid credentials', 400);
     }
@@ -66,7 +68,15 @@ export class AuthService {
       id: user._id,
       firstName: user.firstName,
       role: user.role,
+      expiresIn: '1m'
     });
+    const date = new Date();
+    console.log(`Token Generated at:- ${"Hour: " + date.getHours()}
+                               :${"Minutes: " + date.getMinutes()}
+                               :${"Seconds: " + date.getSeconds()}`);
+
+// Printing the JWT token
+console.log("Token: " + token);
 
     return { token };
   }
