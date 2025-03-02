@@ -5,8 +5,6 @@ import { User } from '../../user/schemas/user.schema';
 import { SignUpDto } from '../dto/signup.dto';
 import { LoginDto } from '../dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { MailService } from '@sendgrid/mail';
@@ -69,9 +67,16 @@ export class AuthService {
       message: 'Login successful',
       id: user._id,
       firstName: user.firstName,
-      role: user.role},
-      {expiresIn: '120m'},
-    );
+      role: user.role,
+      expiresIn: '1m'
+    });
+    const date = new Date();
+    console.log(`Token Generated at:- ${"Hour: " + date.getHours()}
+                               :${"Minutes: " + date.getMinutes()}
+                               :${"Seconds: " + date.getSeconds()}`);
+
+// Printing the JWT token
+console.log("Token: " + token);
 
     return { token };
   }
