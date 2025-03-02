@@ -5,8 +5,6 @@ import { User } from '../../user/schemas/user.schema';
 import { SignUpDto } from '../dto/signup.dto';
 import { LoginDto } from '../dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { MailService } from '@sendgrid/mail';
