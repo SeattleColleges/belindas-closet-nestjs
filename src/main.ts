@@ -19,7 +19,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL || ['http://localhost:3000', 
+      'http://localhost:8082']
   });
   await app.listen(process.env.PORT || 3000);
 }
