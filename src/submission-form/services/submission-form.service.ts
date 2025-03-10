@@ -11,11 +11,9 @@ export class SubmissionFormService {
     private readonly submissionFormModel: Model<SubmissionForm>,
   ) {}
 
-  async create(
-    createSubmissionFormDto: CreateSubmissionFormDto,
-  ): Promise<SubmissionForm> {
-    const createdForm = new this.submissionFormModel(createSubmissionFormDto);
-    return await createdForm.save();
+  async create(createSubmissionFormDto: CreateSubmissionFormDto): Promise<SubmissionForm> {
+      const createdForm = new this.submissionFormModel(createSubmissionFormDto);
+      return await createdForm.save();
   }
 
   async findAll(): Promise<SubmissionForm[]> {
