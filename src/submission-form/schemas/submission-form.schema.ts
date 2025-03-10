@@ -9,7 +9,8 @@ export class SubmissionForm extends Document {
   @Prop({ required: true })
   gender: string;
 
-  @Prop({ required: true }) // Ensure email is unique
+
+  @Prop({ required: true })
   email: string;
 
   @Prop({ required: true })
