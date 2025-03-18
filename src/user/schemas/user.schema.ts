@@ -6,6 +6,14 @@ export enum Role {
   CREATOR = 'creator',
   USER = 'user',
 }
+
+export enum DegreeType {
+  ASSOCIATES = 'associates',
+  BACHELORS = 'bachelors',
+  CERTIFICATE = 'certificate',
+  OTHER = 'other'
+}
+
 @Schema({
   timestamps: true,
 })
@@ -27,6 +35,18 @@ export class User extends Document {
 
   @Prop()
   role: Role;
+
+  @Prop({ enum: DegreeType })
+  degreeType: DegreeType;
+
+  @Prop()
+  major: string;
+
+  @Prop()
+  graduationMonth: string;
+
+  @Prop()
+  graduationYear: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
