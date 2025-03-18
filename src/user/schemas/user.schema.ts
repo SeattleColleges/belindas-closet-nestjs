@@ -8,10 +8,10 @@ export enum Role {
 }
 
 export enum DegreeType {
-  ASSOCIATES = 'associates',
-  BACHELORS = 'bachelors',
-  CERTIFICATE = 'certificate',
-  OTHER = 'other'
+  ASSOCIATES = 'Associates',
+  BACHELORS = 'Bachelors',
+  CERTIFICATE = 'Certificate',
+  OTHER = 'Other'
 }
 
 @Schema({
