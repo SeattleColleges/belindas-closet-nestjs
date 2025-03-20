@@ -5,6 +5,7 @@ import { User } from '../../schemas/user.schema';
 import { JwtAuthGuard } from '../../../auth/jwt.guard';
 import { Roles } from '../../../auth/roles.decorator';
 import { RoleGuard } from '../../../auth/role.guard';
+import { GetUser } from '../../../auth/decorator/user.decorator';
 
 @Controller('user')
 export class UserController {
@@ -13,6 +14,13 @@ export class UserController {
   CONTROLLER: string = UserController.name;
 
   constructor(@Inject('USER_SERVICE') private readonly userService: UserService) { }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getCurrentUser(@GetUser() user: User) {
+    this.logger.log('Getting current user profile', this.CONTROLLER);
+    return await this.userService.getUserById(user.id);
+  }
 
   @Roles('admin')
   @UseGuards(JwtAuthGuard, RoleGuard)

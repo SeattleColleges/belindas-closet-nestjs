@@ -1,5 +1,5 @@
-import { IsEmpty, IsEnum, IsOptional, IsString, IsNumber, Max, Min } from "class-validator";
-import { Role, DegreeType } from "../schemas/user.schema";
+import { IsEmpty, IsEnum, IsOptional, IsString, IsArray, IsNumber, Min, Max } from 'class-validator';
+import { Role, DegreeType, LookingForItem } from "../schemas/user.schema";
 
 // Dynamic last year
 const lastYear = new Date().getFullYear() - 1;
@@ -31,8 +31,9 @@ export class UpdateUserDto {
     readonly role: Role;
 
     @IsOptional()
+    @IsString()
     @IsEnum(DegreeType)
-    readonly degreeType: DegreeType;
+    readonly degreeType: string;
 
     @IsOptional()
     @IsString()
@@ -46,6 +47,10 @@ export class UpdateUserDto {
     @IsNumber()
     @Min(lastYear)
     @Max(2100)
-    readonly graduationYear: number;
+    readonly graduationYear: string;
+
+    @IsOptional()
+    @IsArray()
+    readonly lookingFor: LookingForItem[];
 
 }

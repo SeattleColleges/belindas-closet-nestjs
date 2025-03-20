@@ -1,5 +1,5 @@
-import { Role } from '../../user/schemas/user.schema';
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { Role, DegreeType, LookingForItem } from '../../user/schemas/user.schema';
+import { IsEmail, IsNotEmpty, IsString, MinLength, IsOptional, IsEnum, IsArray } from 'class-validator';
 
 export class SignUpDto {
   @IsNotEmpty()
@@ -26,4 +26,25 @@ export class SignUpDto {
   @IsNotEmpty()
   @IsString()
   readonly role: Role;
+
+  @IsOptional()
+  @IsString()
+  @IsEnum(DegreeType)
+  readonly degreeType?: string;
+
+  @IsOptional()
+  @IsString()
+  readonly major?: string;
+
+  @IsOptional()
+  @IsString()
+  readonly graduationMonth?: string;
+
+  @IsOptional()
+  @IsString()
+  readonly graduationYear?: string;
+
+  @IsOptional()
+  @IsArray()
+  readonly lookingFor?: LookingForItem[];
 }

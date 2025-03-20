@@ -2,51 +2,82 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 export enum Role {
-  ADMIN ='admin',
+  ADMIN = 'admin',
   CREATOR = 'creator',
   USER = 'user',
 }
 
 export enum DegreeType {
-  ASSOCIATES = 'Associates',
-  BACHELORS = 'Bachelors',
+  ASSOCIATES = "Associate's",
+  BACHELORS = "Bachelor's",
   CERTIFICATE = 'Certificate',
   OTHER = 'Other'
+}
+
+export interface LookingForItem {
+  type: string;
+  size?: string;
 }
 
 @Schema({
   timestamps: true,
 })
 export class User extends Document {
-  @Prop()
+  @Prop({ required: true })
   firstName: string;
 
-  @Prop()
+  @Prop({ required: true })
   lastName: string;
 
-  @Prop({ unique: [true, 'Email already exists'] })
+  @Prop({ 
+    unique: true,
+    required: true,
+    message: 'Email already exists'
+  })
   email: string;
 
-  @Prop()
+  @Prop({ required: true })
   pronoun: string;
 
-  @Prop()
+  @Prop({ required: true })
   password: string;
 
-  @Prop()
+  @Prop({ required: true })
   role: Role;
 
-  @Prop({ enum: DegreeType })
-  degreeType: DegreeType;
+  @Prop({ 
+    type: String,
+    enum: Object.values(DegreeType),
+    default: null,
+  })
+  degreeType: string;
 
-  @Prop()
+  @Prop({ 
+    type: String,
+    default: null,
+  })
   major: string;
 
-  @Prop()
+  @Prop({ 
+    type: String,
+    default: null,
+  })
   graduationMonth: string;
 
-  @Prop()
-  graduationYear: number;
+  @Prop({ 
+    type: String,
+    default: null,
+  })
+  graduationYear: string;
+
+  @Prop({ 
+    type: [{ 
+      type: { type: String }, 
+      size: { type: String } 
+    }],
+    default: [],
+  })
+  lookingFor: LookingForItem[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
