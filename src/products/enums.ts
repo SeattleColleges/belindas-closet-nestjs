@@ -2,7 +2,7 @@ export enum ProductType {
   SHOES = "Shoes",
   SHIRTS = "Shirts",
   PANTS = "Pants",
-  SKIRTS = "Skirts",
+  SKIRTS = "Skirt",
   JACKET_BLAZER = "Jacket/Blazer",
   DRESS = "Dress",
   CASUAL_WEAR = "Casual Wear",
