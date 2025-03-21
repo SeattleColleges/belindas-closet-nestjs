@@ -14,10 +14,10 @@ export class CreateProductDto {
   
     // @IsEnum(ShoeSize)
     @IsOptional()
-    productSizeShoe?: null | ShoeSize;
+    productSizeShoe?: ShoeSize | null;
   
-    // @IsEnum(ProductSizes)
     @IsOptional()
+    // @IsEnum(ProductSizes, { message: "Invalid size. Allowed values are XS, S, M, L, XL, XXL, or null." })
     productSizes?: ProductSizes | null;
   
     // @IsEnum(PantsSize)
