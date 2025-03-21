@@ -49,6 +49,8 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
     const user = await this.userModel.findOne({ email });
+
+
     if (!user) {
       throw new HttpException('Invalid credentials', 400);
     }
@@ -65,8 +67,9 @@ export class AuthService {
       message: 'Login successful',
       id: user._id,
       firstName: user.firstName,
-      role: user.role,
-    });
+      role: user.role},
+      {expiresIn: process.env.JWT_EXPIRES_IN || '120m'},
+    );
 
     return { token };
   }
