@@ -68,7 +68,7 @@ export class AuthService {
       id: user._id,
       firstName: user.firstName,
       role: user.role},
-      {expiresIn: '120m'},
+      {expiresIn: process.env.JWT_EXPIRES_IN || '120m'},
     );
 
     return { token };
