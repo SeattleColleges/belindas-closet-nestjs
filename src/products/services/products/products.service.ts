@@ -23,7 +23,11 @@ export class ProductsService {
       `Creating Product: ${JSON.stringify(product, null, '\t')}`,
       this.SERVICE,
     );
-    const newProduct = Object.assign(product, { createdByUser: user });
+    // const newProduct = Object.assign(product, { createdByUser: user });
+    const newProduct = new this.productModel({
+      ...product,
+      createdByUser: user,
+    })
     return await this.productModel.create(newProduct);
   }
 
