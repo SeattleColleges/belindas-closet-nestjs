@@ -20,15 +20,16 @@ describe('ProductsService', () => {
   const mockProduct = {
     id: new Types.ObjectId().toHexString(),
     createByUserID: '',
-    productType: [],
-    productGender: [],
-    productSizeShoe: [],
-    productSizes: [],
-    productSizePantsWaist: [],
-    productSizePantsInseam: [],
+    productType: '',
+    productGender: '',
+    productSizeShoe: '',
+    productSizes: '',
+    productSizePantsWaist: '',
+    productSizePantsInseam: '',
     productDescription: 'string',
     productImage: 'string',
     isHidden: false,
+    isSold: false,
   } as unknown as Product;
 
   beforeEach(async () => {
