@@ -21,7 +21,10 @@ export class Product extends Document {
     @Prop({ type: Number, enum: ShoeSize, required: false, default: null })
     productSizeShoe?: ShoeSize | null;
   
-    @Prop({ type: String, enum: ProductSizes, required: false, default: null })
+    // Removed the "enum: ProductSizes" constraint because it was causing an error
+    // Need to explore this further in the future
+    @Prop({ type: String, required: false, default: null })
+    // @Prop({ type: String, enum: ProductSizes, required: false, default: null })
     productSizes?: ProductSizes | null;
   
     @Prop({ type: Number, enum: PantsSize, required: false, default: null })
