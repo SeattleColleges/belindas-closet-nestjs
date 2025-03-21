@@ -17,6 +17,7 @@ export enum DegreeType {
 export interface LookingForItem {
   type: string;
   size?: string;
+  gender?: string;
 }
 
 @Schema({
@@ -73,7 +74,8 @@ export class User extends Document {
   @Prop({ 
     type: [{ 
       type: { type: String }, 
-      size: { type: String } 
+      size: { type: String },
+      gender: { type: String }
     }],
     default: [],
   })
