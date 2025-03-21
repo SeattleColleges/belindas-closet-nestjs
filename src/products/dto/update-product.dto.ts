@@ -3,34 +3,34 @@ import { User } from '../../user/schemas/user.schema';
 import {ProductType, ProductGender, ProductSizes, ShoeSize, PantsSize} from "../enums"
 
 export class UpdateProductDto {
-    @IsOptional()
+  @IsOptional()
   readonly createdByUser?: User;
 
   @IsOptional()
   readonly updatedByUser?: User;
 
   @IsOptional()
-  @IsEnum(ProductType)
+  // @IsEnum(ProductType)
   productType?: ProductType;
 
   @IsOptional()
-  @IsEnum(ProductGender)
+  // @IsEnum(ProductGender)
   productGender?: ProductGender;
 
   @IsOptional()
-  @IsEnum(ShoeSize)
+  // @IsEnum(ShoeSize)
   productSizeShoe?: ShoeSize;
 
   @IsOptional()
-  @IsEnum(ProductSizes)
-  productSizes?: ProductSizes;
+  // @IsEnum(ProductSizes)
+  productSizes?: ProductSizes | null;
 
   @IsOptional()
-  @IsEnum(PantsSize)
+  // @IsEnum(PantsSize)
   productSizePantsWaist?: PantsSize;
 
   @IsOptional()
-  @IsEnum(PantsSize)
+  // @IsEnum(PantsSize)
   productSizePantsInseam?: PantsSize;
 
   @IsOptional()
