@@ -9,20 +9,23 @@ export class UpdateUserDto {
 
     @IsOptional()
     @IsString()
-    @Matches(/^[a-zA-Z0-9\s\-]*$/, {
+    @Matches(/^[a-zA-Z\s\-]*$/, {
         message: 'Name can only contain letters, spaces, hyphens (-)',
     })
     readonly firstName: string;
 
     @IsOptional()
     @IsString()
-    @Matches(/^[a-zA-Z0-9\s\-]*$/, {
+    @Matches(/^[a-zA-Z\s\-]*$/, {
         message: 'Name can only contain letters, spaces, hyphens (-)',
     })
     readonly lastName: string;
 
     @IsOptional()
     @IsString()
+    @Matches(/^[a-zA-Z\s\/]*$/, {
+        message: 'Name can only contain letters, spaces, front dash (/)',
+    })
     readonly pronoun: string;
     
     @IsOptional()
@@ -45,7 +48,7 @@ export class UpdateUserDto {
     @IsOptional()
     @IsString()
     @Matches(/^[a-zA-Z0-9\s\-']*$/, {
-        message: 'Major can only contain letters, spaces, hyphens (-), and apostrophes (\')',
+        message: 'Major can only contain letters, spaces, numbers, hyphens (-), and apostrophes (\')',
     })
     readonly major: string;
 
