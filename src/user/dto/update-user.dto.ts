@@ -1,5 +1,6 @@
 import { IsEmpty, IsEnum, IsOptional, IsString, IsArray, IsNumber, Min, Max } from 'class-validator';
 import { Role, DegreeType, LookingForItem } from "../schemas/user.schema";
+import { Transform } from 'class-transformer';
 
 // Dynamic last year
 const lastYear = new Date().getFullYear() - 1;
@@ -44,6 +45,7 @@ export class UpdateUserDto {
     readonly graduationMonth: string;
 
     @IsOptional()
+    @Transform(({ value }) => (value ? Number(value) : value))
     @IsNumber()
     @Min(lastYear)
     @Max(2100)
