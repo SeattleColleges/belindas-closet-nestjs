@@ -1,4 +1,4 @@
-import { IsEmpty, IsEnum, IsOptional, IsString, IsArray, IsNumber, Min, Max } from 'class-validator';
+import { IsEmpty, IsEnum, IsOptional, IsString, IsArray, IsNumber, Min, Max, Matches } from 'class-validator';
 import { Role, DegreeType, LookingForItem } from "../schemas/user.schema";
 import { Transform } from 'class-transformer';
 
@@ -9,10 +9,16 @@ export class UpdateUserDto {
 
     @IsOptional()
     @IsString()
+    @Matches(/^[a-zA-Z0-9\s\-]*$/, {
+        message: 'Name can only contain letters, spaces, hyphens (-)',
+    })
     readonly firstName: string;
 
     @IsOptional()
     @IsString()
+    @Matches(/^[a-zA-Z0-9\s\-]*$/, {
+        message: 'Name can only contain letters, spaces, hyphens (-)',
+    })
     readonly lastName: string;
 
     @IsOptional()
@@ -38,6 +44,9 @@ export class UpdateUserDto {
 
     @IsOptional()
     @IsString()
+    @Matches(/^[a-zA-Z0-9\s\-']*$/, {
+        message: 'Major can only contain letters, spaces, hyphens (-), and apostrophes (\')',
+    })
     readonly major: string;
 
     @IsOptional()

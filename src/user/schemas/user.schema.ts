@@ -14,6 +14,21 @@ export enum DegreeType {
   OTHER = 'Other'
 }
 
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+
 export interface LookingForItem {
   type: string;
   size?: string;
@@ -23,6 +38,7 @@ export interface LookingForItem {
 @Schema({
   timestamps: true,
 })
+
 export class User extends Document {
   @Prop({ required: true })
   firstName: string;
@@ -61,6 +77,7 @@ export class User extends Document {
 
   @Prop({ 
     type: String,
+    enum: months,
     default: null,
   })
   graduationMonth: string;
