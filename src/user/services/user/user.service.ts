@@ -22,6 +22,11 @@ export class UserService {
       email: user.email,
       pronoun: user.pronoun,
       role: user.role,
+      degreeType: user.degreeType,
+      major: user.major,
+      graduationMonth: user.graduationMonth,
+      graduationYear: user.graduationYear,
+      lookingFor: user.lookingFor
     }));
   }
 
@@ -45,6 +50,11 @@ export class UserService {
       email: user.email,
       pronoun: user.pronoun,
       role: user.role,
+      degreeType: user.degreeType,
+      major: user.major,
+      graduationMonth: user.graduationMonth,
+      graduationYear: user.graduationYear,
+      lookingFor: user.lookingFor
     } as User;
   }
 
