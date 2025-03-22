@@ -1,5 +1,5 @@
 import { IsEmpty, IsOptional, IsString, IsBoolean, IsEnum } from "class-validator";
-import { User } from "../../user/schemas/user.schema";
+import { Gender, User } from '../../user/schemas/user.schema';
 
 export class CreateProductDto {
     @IsEmpty({message: 'ID field is not required'})
@@ -9,7 +9,7 @@ export class CreateProductDto {
     readonly productType: [];
   
     @IsOptional()
-    @IsEnum(['MALE','FEMALE', 'NON_BINARY'])
+    @IsEnum(Gender)
     readonly productGender: [];
   
     @IsOptional()

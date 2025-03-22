@@ -1,5 +1,5 @@
 import { IsEmpty, IsEnum, IsOptional, IsString, IsArray, IsNumber, Min, Max, Matches } from 'class-validator';
-import { Role, DegreeType, LookingForItem } from "../schemas/user.schema";
+import { Role, DegreeType, LookingForItem, Months } from '../schemas/user.schema';
 import { Transform } from 'class-transformer';
 
 // Dynamic last year
@@ -51,6 +51,7 @@ export class UpdateUserDto {
 
     @IsOptional()
     @IsString()
+    @IsEnum(Months)
     readonly graduationMonth: string;
 
     @IsOptional()

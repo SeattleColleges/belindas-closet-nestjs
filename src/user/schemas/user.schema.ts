@@ -14,7 +14,7 @@ export enum DegreeType {
   OTHER = 'Other'
 }
 
-const months = [
+export const Months = [
   "January",
   "February",
   "March",
@@ -28,6 +28,20 @@ const months = [
   "November",
   "December"
 ];
+
+export const ProductType = [
+  "Shoes",
+  "Shirts",
+  "Pants",
+  "Skirt",
+  "Jacket/Blazer",
+  "Dress",
+  "Casual Wear",
+  "Suits",
+  "Accessories"
+];
+
+export const Gender = ['MALE','FEMALE', 'NON_BINARY']
 
 export interface LookingForItem {
   type: string;
@@ -77,7 +91,7 @@ export class User extends Document {
 
   @Prop({ 
     type: String,
-    enum: months,
+    enum: Months,
     default: null,
   })
   graduationMonth: string;
@@ -90,9 +104,9 @@ export class User extends Document {
 
   @Prop({ 
     type: [{ 
-      type: { type: String }, 
+      type: { type: String, enum: ProductType },
       size: { type: String },
-      gender: { type: String }
+      gender: { type: String, enum: Gender }
     }],
     default: [],
   })
