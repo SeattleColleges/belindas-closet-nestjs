@@ -1,52 +1,51 @@
-import { IsString, IsEmpty, IsOptional, IsArray, IsBoolean } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsBoolean } from 'class-validator';
 import { User } from '../../user/schemas/user.schema';
+import {ProductType, ProductGender, ProductSizes, ShoeSize, PantsSize} from "../enums"
 
 export class UpdateProductDto {
-    @IsOptional()
-    @IsEmpty({message: 'ID field is not required'})
-    readonly createdByUser: User;
+  @IsOptional()
+  readonly createdByUser?: User;
 
-    @IsOptional()
-    @IsEmpty({message: 'ID field is not required'})
-    readonly updatedByUser: User;
+  @IsOptional()
+  readonly updatedByUser?: User;
 
-    @IsOptional()
-    @IsArray()
-    readonly productType: [];
+  @IsOptional()
+  // @IsEnum(ProductType)
+  productType?: ProductType;
 
-    @IsOptional()
-    @IsArray()
-    readonly productGender: [];
+  @IsOptional()
+  // @IsEnum(ProductGender)
+  productGender?: ProductGender;
 
-    @IsOptional()
-    @IsArray()
-    readonly productSizeShoe: [];
+  @IsOptional()
+  // @IsEnum(ShoeSize)
+  productSizeShoe?: ShoeSize;
 
-    @IsOptional()
-    @IsArray()
-    readonly productSizes: [];
+  @IsOptional()
+  // @IsEnum(ProductSizes)
+  productSizes?: ProductSizes | null;
 
-    @IsOptional()
-    @IsArray()
-    readonly productSizePantsWaist: [];
+  @IsOptional()
+  // @IsEnum(PantsSize)
+  productSizePantsWaist?: PantsSize;
 
-    @IsOptional()
-    @IsArray()
-    readonly productSizePantsInseam: [];
+  @IsOptional()
+  // @IsEnum(PantsSize)
+  productSizePantsInseam?: PantsSize;
 
-    @IsOptional()
-    @IsString()
-    readonly productDescription: string;
+  @IsOptional()
+  @IsString()
+  productDescription?: string;
 
-    @IsOptional()
-    @IsString()
-    readonly productImage: string;
+  @IsOptional()
+  @IsString()
+  productImage?: string;
 
-    @IsOptional()
-    @IsBoolean()
-    readonly isHidden: boolean;
+  @IsOptional()
+  @IsBoolean()
+  isHidden?: boolean;
 
-    @IsOptional()
-    @IsBoolean()
-    readonly isSold: boolean;
+  @IsOptional()
+  @IsBoolean()
+  isSold?: boolean;
 }
