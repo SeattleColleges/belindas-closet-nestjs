@@ -7,17 +7,31 @@ import { LoginDto } from '../dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
-import { MailService } from '@sendgrid/mail';
+import { ResetPasswordDto } from '../dto/reset-password.dto';
 import { ChangePasswordDto } from '../dto/change-password.dto';
 import { GetUser } from '../decorator/user.decorator';
+import { randomBytes } from 'crypto';
+import * as AWS from 'aws-sdk';
+import getResetPasswordEmailTemplate from '../email-templates/reset-password';
 
 @Injectable()
 export class AuthService {
+  private ses: AWS.SES;
+
   constructor(
     @InjectModel(User.name)
     private userModel: Model<User>,
     private jwtService: JwtService,
-  ) {}
+  ) {
+    // Configure AWS SES
+    this.ses = new AWS.SES({
+      region: process.env.AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
+  }
 
   async signUp(signUpDto: SignUpDto) {
     const { firstName, lastName, email, pronoun, password, role } = signUpDto;
@@ -50,7 +64,6 @@ export class AuthService {
     const { email, password } = loginDto;
     const user = await this.userModel.findOne({ email });
 
-
     if (!user) {
       throw new HttpException('Invalid credentials', 400);
     }
@@ -63,12 +76,14 @@ export class AuthService {
       throw new HttpException('Invalid credentials', 400);
     }
 
-    const token = this.jwtService.sign({
-      message: 'Login successful',
-      id: user._id,
-      firstName: user.firstName,
-      role: user.role},
-      {expiresIn: process.env.JWT_EXPIRES_IN || '120m'},
+    const token = this.jwtService.sign(
+      {
+        message: 'Login successful',
+        id: user._id,
+        firstName: user.firstName,
+        role: user.role,
+      },
+      { expiresIn: process.env.JWT_EXPIRES_IN || '120m' },
     );
 
     return { token };
@@ -101,7 +116,10 @@ export class AuthService {
     // compare new password with previous password
     const isSamePassword = await bcrypt.compare(newPassword, userPassword);
     if (isSamePassword) {
-      throw new HttpException('New password cannot be the same as previous password', 400);
+      throw new HttpException(
+        'New password cannot be the same as previous password',
+        400,
+      );
     }
 
     // update user password
@@ -128,39 +146,91 @@ export class AuthService {
       throw new HttpException('User does not exist', 404);
     }
 
-    // generate new password
-    const newPassword = Math.random().toString(36).slice(-8);
+    // Generate a random reset token
+    const resetToken = randomBytes(32).toString('hex');
 
-    // update user password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    // Set token expiration (1 hour from now)
+    const resetTokenExpires = new Date();
+    resetTokenExpires.setHours(resetTokenExpires.getHours() + 1);
+
+    // Save the reset token and expiration to the user document
     await this.userModel.updateOne(
+      { email },
       {
-        email,
-      },
-      {
-        password: hashedPassword,
+        resetPasswordToken: resetToken,
+        resetPasswordExpires: resetTokenExpires,
       },
     );
-    // send new password to user
-    const mailService = new MailService();
-    mailService.setApiKey(process.env.SENDGRID_API_KEY);
 
-    const msg = {
-      to: email, // For testing purposes, replace with your email to see the email
-      from: process.env.SENDER_EMAIL,
-      subject: 'Reset Password',
-      html: `<p>Your new password is <strong>${newPassword}</strong>. <br> Please change your password after logging in</p>`,
-    };
+    // Create reset password URL
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8082';
+    const resetUrl = `${frontendUrl}/auth/reset-password?token=${resetToken}`;
 
-    mailService
-      .send(msg)
-      .then(() => {
-        console.log('Email sent');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      // Generate email HTML content using the template
+      const emailHtml = getResetPasswordEmailTemplate(
+        user.firstName || '',
+        resetUrl,
+      );
 
-    return { message: 'Password reset successfully' };
+      // Send email with AWS SES
+      const params = {
+        Source: process.env.SENDER_EMAIL,
+        Destination: {
+          ToAddresses: [email],
+        },
+        Message: {
+          Subject: {
+            Data: 'Password Reset Request',
+          },
+          Body: {
+            Html: {
+              Data: emailHtml,
+            },
+          },
+        },
+      };
+
+      await this.ses.sendEmail(params).promise();
+      return { message: 'Password reset email sent successfully' };
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw new HttpException('Failed to send password reset email', 500);
+    }
+  }
+
+  // verify reset token and reset password
+  async resetPassword(token: string, resetPasswordDto: ResetPasswordDto) {
+    const { newPassword, confirmPassword } = resetPasswordDto;
+
+    // check if passwords match
+    if (newPassword !== confirmPassword) {
+      throw new HttpException('Passwords do not match', 400);
+    }
+
+    // find user with the token and check if token is still valid
+    const user = await this.userModel.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: new Date() },
+    });
+
+    if (!user) {
+      throw new HttpException('Invalid or expired password reset token', 400);
+    }
+
+    // hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // update user password and clear reset token fields
+    await this.userModel.updateOne(
+      { _id: user._id },
+      {
+        password: hashedPassword,
+        resetPasswordToken: null,
+        resetPasswordExpires: null,
+      },
+    );
+
+    return { message: 'Password has been reset successfully' };
   }
 }
