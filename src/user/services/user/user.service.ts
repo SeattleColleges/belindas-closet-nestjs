@@ -2,6 +2,7 @@ import { BadRequestException, HttpException, HttpStatus, Injectable, Logger } fr
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../../schemas/user.schema';
+import { UserSearchData, UserSearchFilters } from '../../dto/user-search-filters.dto';
 
 @Injectable()
 export class UserService {
@@ -11,18 +12,72 @@ export class UserService {
 
   constructor(@InjectModel(User.name) private userModel: Model<User>) { }
 
-  async getAllUsers(): Promise<any> {
-    this.logger.log('Getting all Users', this.SERVICE);
-    //fix: Use serialization to mask password, so we don't have to transform the data
+  async getAllUsers(): Promise<any[]> {
     const users: User[] = await this.userModel.find().exec();
-    return users.map((user) => ({
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      pronoun: user.pronoun,
-      role: user.role,
+    return users.map((u) => ({
+      id: u.id,
+      firstName: u.firstName,
+      lastName: u.lastName,
+      pronoun: u.pronoun,
+      email: u.email,
+      role: u.role,
     }));
+  }
+
+  /* ───────────── SEARCH with filters ───────────── */
+  async searchUsers(filters: UserSearchFilters): Promise<UserSearchData> {
+    const { firstName, lastName, email, role, page } = filters;
+    const currentPage = Number(page) || 1;
+    const limit = 9;
+    const skip = (currentPage - 1) * limit;
+
+    /* Build Mongo query */
+    const queryConditions: any[] = [];
+    if (firstName)
+      queryConditions.push({
+        firstName: { $regex: firstName.toString(), $options: 'i' },
+      });
+    if (lastName)
+      queryConditions.push({
+        lastName: { $regex: lastName.toString(), $options: 'i' },
+      });
+    if (email)
+      queryConditions.push({
+        email: { $regex: email.toString(), $options: 'i' },
+      });
+    if (role) queryConditions.push({ role });
+
+    const options = queryConditions.length ? { $and: queryConditions } : {};
+
+    try {
+      const usersQuery = this.userModel.find(options).sort({ lastName: 'asc' });
+      const [data, total] = await Promise.all([
+        usersQuery.skip(skip).limit(limit).exec(),
+        this.userModel.countDocuments(options),
+      ]);
+
+      const serialized = data.map((u) => ({
+        id: u.id,
+        firstName: u.firstName,
+        lastName: u.lastName,
+        pronoun: u.pronoun,
+        email: u.email,
+        role: u.role,
+      }));
+
+      return {
+        data: serialized,
+        page: currentPage,
+        total,
+        pages: Math.ceil(total / limit),
+      };
+    } catch (err) {
+      this.logger.error('Error searching users', err);
+      throw new HttpException(
+        'Error retrieving users',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async getUserById(id: string): Promise<User> {

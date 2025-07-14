@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, UseGuards, HttpCode } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, UseGuards, HttpCode, Query } from '@nestjs/common';
 import { UserService } from '../../services/user/user.service';
-import { UpdateUserDto } from '../../dto/update-user.dto';
-import { User } from '../../schemas/user.schema';
-import { JwtAuthGuard } from '../../../auth/jwt.guard';
-import { Roles } from '../../../auth/roles.decorator';
+import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../../../auth/role.guard';
+import { Roles } from '../../../auth/roles.decorator';
+import { UpdateUserDto } from '../../dto/update-user.dto';
+import { UserSearchFilters } from '../../dto/user-search-filters.dto';
+import { Role as UserRole } from '../../schemas/user.schema';
 
-@Controller('user')
+@UseGuards(AuthGuard('jwt'))
+@Controller('users')
 export class UserController {
 
   private readonly logger = new Logger;
@@ -15,15 +17,14 @@ export class UserController {
   constructor(@Inject('USER_SERVICE') private readonly userService: UserService) { }
 
   @Roles('admin')
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  @UseGuards(RoleGuard)
   @Get('')
   async getAllUsers() {
-    this.logger.log('Getting all Users', this.CONTROLLER);
-    return await this.userService.getAllUsers();
+    return this.userService.getAllUsers();
   }
 
   @Roles('admin')
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  @UseGuards(RoleGuard)
   @Delete('delete/:id')
   @HttpCode(204) // Ensures no response in body
   async deleteUser(@Param('id') id: string) {
@@ -31,25 +32,35 @@ export class UserController {
     return await this.userService.deleteUser(id);
   }
 
-  @Get(':id')
+  /* --- search users (admin only) --- */
+  @Roles('admin')
+  @UseGuards(RoleGuard)
+  @Get('search')
+  async searchUsers(@Query() query: UserSearchFilters) {
+    /* hard-fail if role query param isn’t a real enum */
+    if (query.role && !Object.values(UserRole).includes(query.role as UserRole))
+      query.role = '' as any;
+    return this.userService.searchUsers(query);
+  }
+
+  @Get('find/:id')
   async getUserById(@Param('id') id: string) {
-    this.logger.log(`Getting User with id: ${id}`, this.CONTROLLER);
     return this.userService.getUserById(id);
   }
 
   @Get('email/:email')
   async getUserByEmail(@Param('email') email: string) {
-    this.logger.log(`Getting User with email: ${email}`, this.CONTROLLER);
-    return await this.userService.getUserByEmail(email);
+    return this.userService.getUserByEmail(email);
   }
 
-  @UseGuards(JwtAuthGuard, RoleGuard)
   @Patch('update/:id')
-  async updateUser(@Param('id') id: string, @Body() userDto: UpdateUserDto) {
-    this.logger.log(
-      `Updating User with id: ${id} with user: ${JSON.stringify(userDto, null, '\t')}`,
-      this.CONTROLLER
-    );
-    return await this.userService.updateUser(id, userDto as User);
+  async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+    return this.userService.updateUser(id, dto as any);
+  }
+
+  @Delete('remove/:id')
+  async removeUser(@Param('id') id: string) {
+    await this.userService.deleteUser(id);
   }
 }
+
